@@ -1,0 +1,88 @@
+---
+const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
+const siteRole = import.meta.env.SITE_ROLE ?? '';
+const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
+const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
+const email = import.meta.env.SITE_EMAIL ?? '';
+const year = new Date().getFullYear();
+
+const socials = [
+  githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
+  linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
+  email ? { href: `mailto:${email}`, label: 'Email' } : null,
+].filter(Boolean);
+---
+
+<footer class="site-footer">
+  <div class="container footer-wrap">
+    <p class="footer-brand">
+      {siteName}
+      {siteRole ? ` · ${siteRole}` : ''}
+    </p>
+    <ul class="footer-links">
+      {
+        socials.map((social) => (
+          <li>
+            <a href={social.href} rel="me">
+              {social.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="footer-copy">© {year} {siteName}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-6);
+    padding-block: var(--space-4);
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .footer-brand {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-links a {
+    color: var(--color-text-muted);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .footer-copy {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 720px) {
+    .footer-wrap {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
