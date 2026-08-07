@@ -6,10 +6,22 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 
 <Base title="Proyectos" description="Proyectos alojados en GitHub.">
   <section class="page container">
-    <h1>Proyectos</h1>
-    <p class="lead">Mis proyectos públicos en GitHub.</p>
+    <h1 data-reveal>Proyectos</h1>
+    <p class="lead" data-reveal>Mis proyectos públicos en GitHub.</p>
 
-    <div id="projects" class="projects" data-username={siteUser} aria-live="polite">
+    <div class="projects-toolbar" data-projects-toolbar hidden>
+      <div class="filter-chips" data-filter-chips role="group" aria-label="Filtrar por lenguaje"></div>
+      <div class="sort-field">
+        <label for="sort-select">Ordenar</label>
+        <select id="sort-select" data-sort-select>
+          <option value="updated">Recientes</option>
+          <option value="stars">Estrellas</option>
+          <option value="name">Nombre</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="projects" class="projects" data-username={siteUser} data-reveal aria-live="polite">
       <p class="projects-status" role="status">Cargando proyectos…</p>
     </div>
   </section>
@@ -19,8 +31,24 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
   import { getRepos } from '../scripts/github';
   import type { GitHubRepo } from '../scripts/github';
 
+  let repos: GitHubRepo[] = [];
+  let language = 'all';
+  let sort = 'updated';
+
   function getContainer(): HTMLElement | null {
     return document.querySelector('#projects');
+  }
+
+  function getToolbar(): HTMLElement | null {
+    return document.querySelector('[data-projects-toolbar]');
+  }
+
+  function getFilterChips(): HTMLElement | null {
+    return document.querySelector('[data-filter-chips]');
+  }
+
+  function getSortSelect(): HTMLSelectElement | null {
+    return document.querySelector('[data-sort-select]');
   }
 
   const username = getContainer()?.getAttribute('data-username') ?? '';
@@ -76,11 +104,66 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     `;
   }
 
-  function renderCards(repos: GitHubRepo[]): void {
+  function renderCards(cards: GitHubRepo[]): void {
     const container = getContainer();
     if (container) {
-      container.innerHTML = repos.map(projectCard).join('');
+      container.innerHTML = cards.map(projectCard).join('');
     }
+  }
+
+  function render(): void {
+    const filtered = repos.filter((repo) => language === 'all' || repo.language === language);
+    const sorted = [...filtered].sort((a, b) => {
+      if (sort === 'stars') return b.stargazers_count - a.stargazers_count;
+      if (sort === 'name') return a.name.localeCompare(b.name);
+      return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+    });
+
+    if (sorted.length === 0) {
+      setStatus(
+        language === 'all'
+          ? 'Todavía no hay proyectos públicos.'
+          : `No hay proyectos en ${escapeHtml(language)}.`
+      );
+      return;
+    }
+    renderCards(sorted);
+  }
+
+  function buildToolbar(): void {
+    const toolbar = getToolbar();
+    const chips = getFilterChips();
+    if (!toolbar || !chips) return;
+
+    const languages = Array.from(new Set(repos.map((repo) => repo.language).filter(Boolean))).sort();
+    chips.innerHTML = '';
+
+    const options: [string, string][] = [['all', 'Todos'], ...languages.map((lang) => [lang, lang] as [string, string])];
+    for (const [value, label] of options) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'filter-chip';
+      button.textContent = label;
+      button.setAttribute('aria-pressed', String(language === value));
+      button.addEventListener('click', () => {
+        language = value;
+        chips.querySelectorAll('button').forEach((btn) => btn.setAttribute('aria-pressed', 'false'));
+        button.setAttribute('aria-pressed', 'true');
+        render();
+      });
+      chips.appendChild(button);
+    }
+
+    toolbar.hidden = false;
+  }
+
+  function bindSort(): void {
+    const select = getSortSelect();
+    if (!select) return;
+    select.addEventListener('change', () => {
+      sort = select.value;
+      render();
+    });
   }
 
   async function load(): Promise<void> {
@@ -93,13 +176,15 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     }
 
     try {
-      const repos = await getRepos(username);
-      const visible = repos.filter((repo) => !repo.fork && !repo.archived);
-      if (visible.length === 0) {
+      const all = await getRepos(username);
+      repos = all.filter((repo) => !repo.fork && !repo.archived);
+      if (repos.length === 0) {
         setStatus('Todavía no hay proyectos públicos.');
         return;
       }
-      renderCards(visible);
+      bindSort();
+      buildToolbar();
+      render();
     } catch {
       if (container) {
         const retry = document.createElement('button');

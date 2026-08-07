@@ -30,7 +30,7 @@ const formattedDate = tutorial.data.date.toLocaleDateString('es-ES', {
 ---
 
 <Base title={tutorial.data.title} description={tutorial.data.description}>
-  <article class="article container">
+  <article class="article container" data-reveal>
     <nav class="breadcrumbs" aria-label="Ruta">
       <a href={`${base}tutoriales`}>Tutoriales</a>
       {series ? <span aria-hidden="true"> / </span> : null}

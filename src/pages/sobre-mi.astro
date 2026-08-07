@@ -54,19 +54,19 @@ const skillGroups = [
 
 <Base title="Sobre mí" description={`Conoce más sobre ${siteName}.`}>
   <section class="page container">
-    <h1>Sobre mí</h1>
-    {siteBio ? <p class="lead">{siteBio}</p> : null}
-    <p>
+    <h1 data-reveal>Sobre mí</h1>
+    {siteBio ? <p class="lead" data-reveal>{siteBio}</p> : null}
+    <p data-reveal>
       Me dedico al desarrollo y al soporte técnico informático, con el objetivo
       constante de ampliar mis conocimientos sobre desarrollo de software.
       Este espacio reúne los proyectos en los que voy trabajando.
     </p>
 
-    <section class="skills" aria-labelledby="skills-title">
+    <section class="skills" aria-labelledby="skills-title" data-reveal>
       <h2 id="skills-title">Tecnologías</h2>
       {
         skillGroups.map((group) => (
-          <div class="skill-group">
+          <div class="skill-group" data-reveal>
             <h3 class="skill-group-title">{group.category}</h3>
             <ul class="skills-list">
               {group.skills.map((skill) => (

@@ -12,13 +12,13 @@ const base = import.meta.env.BASE_URL;
 
 <Base title="Inicio" description={siteBio}>
   <section class="hero container">
-    <h1 class="hero-title">
+    <h1 class="hero-title" data-reveal>
       Hola, soy <span class="gradient-text">{siteName}</span>
     </h1>
-    {siteRole ? <p class="hero-role">{siteRole}</p> : null}
-    {siteBio ? <p class="hero-bio">{siteBio}</p> : null}
-    {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
-    <div class="hero-actions">
+    {siteRole ? <p class="hero-role" data-reveal>{siteRole}</p> : null}
+    {siteBio ? <p class="hero-bio" data-reveal>{siteBio}</p> : null}
+    {siteObjective ? <p class="hero-objective" data-reveal>{siteObjective}</p> : null}
+    <div class="hero-actions" data-reveal>
       <a class="btn btn-primary" href={`${base}proyectos`}>Ver proyectos</a>
       {siteCvUrl ? (
         <a class="btn btn-secondary" href={siteCvUrl}>
@@ -30,7 +30,7 @@ const base = import.meta.env.BASE_URL;
     </div>
   </section>
 
-  <section class="tutorials-cta container" aria-labelledby="tutorials-cta-title">
+  <section class="tutorials-cta container" aria-labelledby="tutorials-cta-title" data-reveal>
     <div>
       <h2 id="tutorials-cta-title">¿Quieres aprender cómo lo hice?</h2>
       <p>
