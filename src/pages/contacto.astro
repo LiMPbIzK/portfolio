@@ -9,7 +9,7 @@ const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
 const socials = [
   githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
   linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
-].filter(Boolean);
+].filter((social): social is { href: string; label: string } => Boolean(social));
 ---
 
 <Base title="Contacto" description={`Ponte en contacto con ${siteName}.`}>
@@ -71,7 +71,7 @@ const socials = [
 </Base>
 
 <script>
-  const form = document.querySelector('[data-contact-form]');
+  const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
   const note = document.querySelector('[data-form-note]');
 
   form?.addEventListener('submit', (event) => {

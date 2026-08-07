@@ -10,7 +10,7 @@ const socials = [
   githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
   linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
   email ? { href: `mailto:${email}`, label: 'Email' } : null,
-].filter(Boolean);
+].filter((social): social is { href: string; label: string } => Boolean(social));
 ---
 
 <footer class="site-footer">

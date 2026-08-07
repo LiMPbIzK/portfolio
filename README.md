@@ -33,7 +33,7 @@ Generada con **Astro** (SSG) y desplegada en **GitHub Pages** con dominio person
 | `npm run dev` | Servidor de desarrollo en `http://localhost:4321` |
 | `npm run build` | Build de producción en `./dist/` |
 | `npm run preview` | Previsualiza el build antes de desplegar |
-| `npm run astro check` | Comprobación de tipos y errores |
+| `npm run check` | Comprobación de tipos y errores |
 
 ## Variables de entorno
 
