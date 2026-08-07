@@ -23,7 +23,7 @@ const currentPath = path === '' ? '/' : `/${path}`;
       aria-controls="nav-menu"
       data-nav-toggle
     >
-      <span class="visually-hidden">Abrir menú</span>
+      <span class="visually-hidden" data-nav-toggle-label>Abrir menú</span>
       <span class="nav-toggle-line" aria-hidden="true"></span>
       <span class="nav-toggle-line" aria-hidden="true"></span>
       <span class="nav-toggle-line" aria-hidden="true"></span>
@@ -49,13 +49,34 @@ const currentPath = path === '' ? '/' : `/${path}`;
 </header>
 
 <script>
-  const toggle = document.querySelector('[data-nav-toggle]');
+  const toggle = document.querySelector('[data-nav-toggle]') as HTMLElement | null;
   const menu = document.querySelector('#nav-menu');
+  const label = document.querySelector('[data-nav-toggle-label]');
 
-  toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    menu?.classList.toggle('open');
+  function isOpen(): boolean {
+    return toggle?.getAttribute('aria-expanded') === 'true';
+  }
+
+  function setOpen(open: boolean): void {
+    if (!toggle) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('open', open);
+    if (label) {
+      label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+    }
+  }
+
+  toggle?.addEventListener('click', () => setOpen(!isOpen()));
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
   });
 </script>
 

@@ -10,7 +10,7 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     <p class="lead">Mis proyectos públicos en GitHub.</p>
 
     <div id="projects" class="projects" data-username={siteUser} aria-live="polite">
-      <p class="projects-status">Cargando proyectos…</p>
+      <p class="projects-status" role="status">Cargando proyectos…</p>
     </div>
   </section>
 </Base>
@@ -33,7 +33,7 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 
   function setStatus(message: string): void {
     if (container) {
-      container.innerHTML = `<p class="projects-status">${escapeHtml(message)}</p>`;
+      container.innerHTML = `<p class="projects-status" role="status">${escapeHtml(message)}</p>`;
     }
   }
 
@@ -54,8 +54,8 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
               ? `<span class="project-language"><span class="language-dot" aria-hidden="true"></span>${escapeHtml(repo.language)}</span>`
               : ''
           }
-          ${repo.stargazers_count > 0 ? `<span>★ ${repo.stargazers_count}</span>` : ''}
-          ${repo.forks_count > 0 ? `<span>⑂ ${repo.forks_count}</span>` : ''}
+          ${repo.stargazers_count > 0 ? `<span aria-label="${repo.stargazers_count} estrellas">★ ${repo.stargazers_count}</span>` : ''}
+          ${repo.forks_count > 0 ? `<span aria-label="${repo.forks_count} forks">⑂ ${repo.forks_count}</span>` : ''}
         </div>
         <div class="project-links">
           ${
