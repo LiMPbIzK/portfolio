@@ -5,7 +5,28 @@ const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const siteBio = import.meta.env.SITE_BIO ?? '';
 const base = import.meta.env.BASE_URL;
 
-const skills = ['HTML', 'CSS', 'JavaScript', 'Python', 'Git', 'GitHub'];
+const skillGroups = [
+  {
+    category: 'Lenguajes y desarrollo',
+    skills: ['Delphi', 'HTML5', 'CSS3', 'JavaScript', 'Python'],
+  },
+  {
+    category: 'Bases de datos',
+    skills: ['Firebird SQL'],
+  },
+  {
+    category: 'Herramientas y metodologías',
+    skills: ['Git', 'CVS', 'FastReport', 'Jira', 'Scrum / Kanban'],
+  },
+  {
+    category: 'Sistemas y redes',
+    skills: ['Windows', 'Linux', 'macOS', 'LAN / Wi-Fi', 'Copias de seguridad'],
+  },
+  {
+    category: 'Hardware y soporte',
+    skills: ['Diagnóstico', 'Reparación', 'Soporte técnico'],
+  },
+];
 ---
 
 <Base title="Sobre mí" description={`Conoce más sobre ${siteName}.`}>
@@ -20,13 +41,18 @@ const skills = ['HTML', 'CSS', 'JavaScript', 'Python', 'Git', 'GitHub'];
 
     <section class="skills" aria-labelledby="skills-title">
       <h2 id="skills-title">Tecnologías</h2>
-      <ul class="skills-list">
-        {
-          skills.map((skill) => (
-            <li class="skill-chip">{skill}</li>
-          ))
-        }
-      </ul>
+      {
+        skillGroups.map((group) => (
+          <div class="skill-group">
+            <h3 class="skill-group-title">{group.category}</h3>
+            <ul class="skills-list">
+              {group.skills.map((skill) => (
+                <li class="skill-chip">{skill}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
     </section>
 
     <p>
@@ -50,6 +76,17 @@ const skills = ['HTML', 'CSS', 'JavaScript', 'Python', 'Git', 'GitHub'];
 
   .skills {
     margin-top: var(--space-5);
+  }
+
+  .skill-group {
+    margin-bottom: var(--space-3);
+  }
+
+  .skill-group-title {
+    margin-bottom: var(--space-1);
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
   }
 
   .skills-list {
