@@ -423,6 +423,26 @@
   transform: none;
 }
 
+[data-gsap='parallax'] {
+  will-change: transform;
+}
+
+.hero-title .gradient-text .word {
+  background-image: linear-gradient(120deg, var(--color-accent), #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-js] .hero-role,
+  html[data-js] .hero-bio,
+  html[data-js] .hero-objective,
+  html[data-js] .hero-actions {
+    opacity: 0;
+  }
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.3s;

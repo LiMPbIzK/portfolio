@@ -62,7 +62,7 @@ const skillGroups = [
       Este espacio reúne los proyectos en los que voy trabajando.
     </p>
 
-    <section class="skills" aria-labelledby="skills-title" data-reveal>
+    <section class="skills" aria-labelledby="skills-title" data-gsap="parallax">
       <h2 id="skills-title">Tecnologías</h2>
       {
         skillGroups.map((group) => (
@@ -89,6 +89,10 @@ const skillGroups = [
     </p>
   </section>
 </Base>
+
+<script>
+  import '../scripts/gsap';
+</script>
 
 <style>
   .page {

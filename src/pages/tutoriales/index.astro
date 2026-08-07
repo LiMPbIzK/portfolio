@@ -30,7 +30,7 @@ const standalone = tutorials.filter((t) => !t.data.series);
 
     {
       seriesEntries.map((series) => (
-        <section class="series" aria-labelledby={`series-${series.id}`} data-reveal>
+        <section class="series" aria-labelledby={`series-${series.id}`} data-gsap="parallax">
           <h2 id={`series-${series.id}`} class="series-title">
             {series.info.title}
           </h2>
@@ -78,6 +78,10 @@ const standalone = tutorials.filter((t) => !t.data.series);
     }
   </section>
 </Base>
+
+<script>
+  import '../../scripts/gsap';
+</script>
 
 <style>
   .page {

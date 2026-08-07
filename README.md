@@ -16,6 +16,7 @@ Generada con **Astro** (SSG) y desplegada en **GitHub Pages** con dominio person
 | **Modo oscuro** | Toggle persistente en `localStorage` con respeto a `prefers-color-scheme` |
 | **View Transitions** | Navegación entre páginas sin recarga con `astro:transitions` |
 | **astro-icon** | Iconos SVG optimizados (`simple-icons` + `lucide`) solo con lo usado |
+| **GSAP** | Animaciones: entrada del hero con SplitText, parallax de scroll con ScrollTrigger |
 | **GitHub REST API** | Carga en vivo de repos: `https://api.github.com/users/{user}/repos` |
 | **localStorage** | Cache de la API (TTL 24 h) para respetar el rate-limit de GitHub |
 | **@astrojs/sitemap** | Generación de `sitemap.xml` para SEO |
