@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Icon } from 'astro-icon/components';
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const siteRole = import.meta.env.SITE_ROLE ?? '';
@@ -11,13 +12,20 @@ const base = import.meta.env.BASE_URL;
 
 <Base title="Inicio" description={siteBio}>
   <section class="hero container">
-    <h1 class="hero-title">Hola, soy {siteName}</h1>
+    <h1 class="hero-title">
+      Hola, soy <span class="gradient-text">{siteName}</span>
+    </h1>
     {siteRole ? <p class="hero-role">{siteRole}</p> : null}
     {siteBio ? <p class="hero-bio">{siteBio}</p> : null}
     {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
     <div class="hero-actions">
       <a class="btn btn-primary" href={`${base}proyectos`}>Ver proyectos</a>
-      {siteCvUrl ? <a class="btn btn-secondary" href={siteCvUrl}>Descargar CV</a> : null}
+      {siteCvUrl ? (
+        <a class="btn btn-secondary" href={siteCvUrl}>
+          <Icon class="btn-icon" name="lucide:download" aria-hidden="true" />
+          Descargar CV
+        </a>
+      ) : null}
       <a class="btn btn-secondary" href={`${base}contacto`}>Contacto</a>
     </div>
   </section>
@@ -37,15 +45,64 @@ const base = import.meta.env.BASE_URL;
 
 <style>
   .hero {
+    position: relative;
+    isolation: isolate;
     padding-block: var(--space-6) var(--space-5);
     max-width: 760px;
     margin-inline: auto;
     text-align: center;
   }
 
+  .hero::before,
+  .hero::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(64px);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .hero::before {
+    width: 420px;
+    height: 420px;
+    top: -140px;
+    left: -160px;
+    background-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    animation: hero-float 12s ease-in-out infinite;
+  }
+
+  .hero::after {
+    width: 380px;
+    height: 380px;
+    bottom: -140px;
+    right: -160px;
+    background-color: color-mix(in srgb, #8b5cf6 30%, transparent);
+    animation: hero-float 16s ease-in-out infinite reverse;
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+      transform: translate(26px, -20px) scale(1.08);
+    }
+  }
+
   .hero-title {
-    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    font-size: clamp(2.5rem, 7vw, 4.25rem);
     margin-bottom: var(--space-2);
+  }
+
+  .gradient-text {
+    background-image: linear-gradient(120deg, var(--color-accent), #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   .hero-role {

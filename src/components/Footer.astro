@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const siteRole = import.meta.env.SITE_ROLE ?? '';
 const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
@@ -7,10 +9,18 @@ const email = import.meta.env.SITE_EMAIL ?? '';
 const year = new Date().getFullYear();
 
 const socials = [
-  githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
-  linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
-  email ? { href: `mailto:${email}`, label: 'Email' } : null,
-].filter((social): social is { href: string; label: string } => Boolean(social));
+  githubUrl
+    ? { href: githubUrl, label: 'GitHub', icon: 'simple-icons:github' }
+    : null,
+  linkedinUrl
+    ? { href: linkedinUrl, label: 'LinkedIn', icon: 'simple-icons:linkedin' }
+    : null,
+  email
+    ? { href: `mailto:${email}`, label: 'Email', icon: 'simple-icons:gmail' }
+    : null,
+].filter(
+  (social): social is { href: string; label: string; icon: string } => Boolean(social)
+);
 ---
 
 <footer class="site-footer">
@@ -23,8 +33,9 @@ const socials = [
       {
         socials.map((social) => (
           <li>
-            <a href={social.href} rel="me">
-              {social.label}
+            <a class="footer-link" href={social.href} rel="me">
+              <Icon class="footer-icon" name={social.icon} aria-hidden="true" />
+              <span>{social.label}</span>
             </a>
           </li>
         ))
@@ -64,13 +75,21 @@ const socials = [
     padding: 0;
   }
 
-  .footer-links a {
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
     color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
   }
 
-  .footer-links a:hover {
-    color: var(--color-accent);
-    text-decoration: none;
+  .footer-icon {
+    width: 1.1em;
+    height: 1.1em;
   }
 
   .footer-copy {

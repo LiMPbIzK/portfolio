@@ -137,7 +137,10 @@
 
 @layer components {
   .btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius);
     font-weight: 500;
@@ -145,17 +148,32 @@
     transition:
       background-color var(--transition),
       color var(--transition),
-      border-color var(--transition);
+      border-color var(--transition),
+      box-shadow var(--transition),
+      transform var(--transition);
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-icon {
+    width: 1.1em;
+    height: 1.1em;
   }
 
   .btn-primary {
-    background-color: var(--color-accent);
+    background-image: linear-gradient(
+      135deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 70%, var(--color-accent-dark))
+    );
     color: #ffffff;
 
     &:hover {
-      background-color: var(--color-accent-dark);
       color: #ffffff;
       text-decoration: none;
+      box-shadow: 0 8px 24px color-mix(in srgb, var(--color-accent) 40%, transparent);
     }
   }
 
@@ -168,6 +186,7 @@
       border-color: var(--color-accent);
       color: var(--color-accent);
       text-decoration: none;
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--color-accent) 18%, transparent);
     }
   }
 
@@ -185,6 +204,8 @@
   }
 
   .project-card {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -197,9 +218,23 @@
       box-shadow var(--transition),
       transform var(--transition);
 
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), #8b5cf6);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
     &:hover {
       box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
+
+      &::before {
+        opacity: 1;
+      }
     }
   }
 
@@ -245,6 +280,16 @@
       padding: var(--space-1) var(--space-2);
       font-size: 0.875rem;
     }
+  }
+
+  .card-arrow {
+    width: 1em;
+    height: 1em;
+    transition: transform var(--transition);
+  }
+
+  .btn:hover .card-arrow {
+    transform: translate(2px, -2px);
   }
 
   @container (max-width: 360px) {

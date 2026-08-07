@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Icon } from 'astro-icon/components';
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const siteBio = import.meta.env.SITE_BIO ?? '';
@@ -8,23 +9,45 @@ const base = import.meta.env.BASE_URL;
 const skillGroups = [
   {
     category: 'Lenguajes y desarrollo',
-    skills: ['Delphi', 'HTML5', 'CSS3', 'JavaScript', 'Python'],
+    skills: [
+      { name: 'Delphi', icon: 'simple-icons:delphi' },
+      { name: 'HTML5', icon: 'simple-icons:html5' },
+      { name: 'CSS3', icon: 'simple-icons:css3' },
+      { name: 'JavaScript', icon: 'simple-icons:javascript' },
+      { name: 'Python', icon: 'simple-icons:python' },
+    ],
   },
   {
     category: 'Bases de datos',
-    skills: ['Firebird SQL'],
+    skills: [{ name: 'Firebird SQL', icon: null }],
   },
   {
     category: 'Herramientas y metodologías',
-    skills: ['Git', 'CVS', 'FastReport', 'Jira', 'Scrum / Kanban'],
+    skills: [
+      { name: 'Git', icon: 'simple-icons:git' },
+      { name: 'CVS', icon: null },
+      { name: 'FastReport', icon: null },
+      { name: 'Jira', icon: 'simple-icons:jira' },
+      { name: 'Scrum / Kanban', icon: null },
+    ],
   },
   {
     category: 'Sistemas y redes',
-    skills: ['Windows', 'Linux', 'macOS', 'LAN / Wi-Fi', 'Copias de seguridad'],
+    skills: [
+      { name: 'Windows', icon: 'simple-icons:windows' },
+      { name: 'Linux', icon: 'simple-icons:linux' },
+      { name: 'macOS', icon: 'simple-icons:apple' },
+      { name: 'LAN / Wi-Fi', icon: null },
+      { name: 'Copias de seguridad', icon: null },
+    ],
   },
   {
     category: 'Hardware y soporte',
-    skills: ['Diagnóstico', 'Reparación', 'Soporte técnico'],
+    skills: [
+      { name: 'Diagnóstico', icon: null },
+      { name: 'Reparación', icon: null },
+      { name: 'Soporte técnico', icon: null },
+    ],
   },
 ];
 ---
@@ -47,7 +70,12 @@ const skillGroups = [
             <h3 class="skill-group-title">{group.category}</h3>
             <ul class="skills-list">
               {group.skills.map((skill) => (
-                <li class="skill-chip">{skill}</li>
+                <li class="skill-chip">
+                  {skill.icon ? (
+                    <Icon class="skill-icon" name={skill.icon} aria-hidden="true" />
+                  ) : null}
+                  {skill.name}
+                </li>
               ))}
             </ul>
           </div>
@@ -99,11 +127,19 @@ const skillGroups = [
   }
 
   .skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
     padding: var(--space-1) var(--space-2);
     background-color: var(--color-accent-soft);
     color: var(--color-accent);
     border-radius: 999px;
     font-size: 0.875rem;
     font-weight: 500;
+  }
+
+  .skill-icon {
+    width: 1em;
+    height: 1em;
   }
 </style>

@@ -37,6 +37,9 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     }
   }
 
+  const arrowSvg =
+    '<svg class="card-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>';
+
   function projectCard(repo: GitHubRepo): string {
     return `
       <article class="project-card">
@@ -60,10 +63,10 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
         <div class="project-links">
           ${
             repo.homepage
-              ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Demo</a>`
+              ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Demo ${arrowSvg}</a>`
               : ''
           }
-          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">Código</a>
+          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">Código ${arrowSvg}</a>
         </div>
       </article>
     `;
