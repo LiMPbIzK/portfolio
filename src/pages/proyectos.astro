@@ -1,15 +1,109 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 ---
 
 <Base title="Proyectos" description="Proyectos alojados en GitHub.">
   <section class="page container">
     <h1>Proyectos</h1>
-    <p class="lead">
-      Lista de proyectos cargados desde GitHub. Contenido en construcción.
-    </p>
+    <p class="lead">Mis proyectos públicos en GitHub.</p>
+
+    <div id="projects" class="projects" data-username={siteUser} aria-live="polite">
+      <p class="projects-status">Cargando proyectos…</p>
+    </div>
   </section>
 </Base>
+
+<script>
+  import { getRepos } from '../scripts/github';
+
+  const container = document.querySelector('#projects');
+  const username = container?.getAttribute('data-username') ?? '';
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function setStatus(message) {
+    if (container) {
+      container.innerHTML = `<p class="projects-status">${escapeHtml(message)}</p>`;
+    }
+  }
+
+  function projectCard(repo) {
+    return `
+      <article class="project-card">
+        <h3 class="project-name">
+          <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(repo.name)}</a>
+        </h3>
+        ${
+          repo.description
+            ? `<p class="project-description">${escapeHtml(repo.description)}</p>`
+            : ''
+        }
+        <div class="project-meta">
+          ${
+            repo.language
+              ? `<span class="project-language"><span class="language-dot" aria-hidden="true"></span>${escapeHtml(repo.language)}</span>`
+              : ''
+          }
+          ${repo.stargazers_count > 0 ? `<span>★ ${repo.stargazers_count}</span>` : ''}
+          ${repo.forks_count > 0 ? `<span>⑂ ${repo.forks_count}</span>` : ''}
+        </div>
+        <div class="project-links">
+          ${
+            repo.homepage
+              ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Demo</a>`
+              : ''
+          }
+          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">Código</a>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderCards(repos) {
+    if (container) {
+      container.innerHTML = repos.map(projectCard).join('');
+    }
+  }
+
+  async function load() {
+    if (!username) {
+      setStatus('No se ha configurado el usuario de GitHub.');
+      return;
+    }
+
+    try {
+      const repos = await getRepos(username);
+      const visible = repos.filter((repo) => !repo.fork && !repo.archived);
+      if (visible.length === 0) {
+        setStatus('Todavía no hay proyectos públicos.');
+        return;
+      }
+      renderCards(visible);
+    } catch {
+      if (container) {
+        const retry = document.createElement('button');
+        retry.type = 'button';
+        retry.className = 'btn btn-secondary';
+        retry.textContent = 'Reintentar';
+        retry.addEventListener('click', load);
+
+        container.textContent = 'No se pudieron cargar los proyectos. ';
+        container.appendChild(retry);
+      }
+    }
+  }
+
+  void load();
+</script>
 
 <style>
   .page {
