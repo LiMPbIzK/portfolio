@@ -11,11 +11,15 @@ Generada con **Astro** (SSG) y desplegada en **GitHub Pages** con dominio person
 | **Astro** | Framework SSG: genera HTML estático real por página |
 | **TypeScript** | Tipado estricto en configuración y scripts |
 | **HTML5** | Estructura semántica y accesible |
-| **CSS3** | Variables (custom properties), Grid/Flexbox, diseño responsive |
-| **JavaScript/TypeScript vanilla** | Menú móvil y carga de proyectos vía API |
+| **CSS3** | Variables (custom properties), `color-mix()`, capas `@layer`, anidamiento, container queries, Grid/Flexbox, diseño responsive |
+| **JavaScript/TypeScript vanilla** | Menú móvil, toggle de tema, scroll reveal y carga de proyectos vía API |
+| **Modo oscuro** | Toggle persistente en `localStorage` con respeto a `prefers-color-scheme` |
+| **View Transitions** | Navegación entre páginas sin recarga con `astro:transitions` |
+| **astro-icon** | Iconos SVG optimizados (`simple-icons` + `lucide`) solo con lo usado |
 | **GitHub REST API** | Carga en vivo de repos: `https://api.github.com/users/{user}/repos` |
 | **localStorage** | Cache de la API (TTL 24 h) para respetar el rate-limit de GitHub |
 | **@astrojs/sitemap** | Generación de `sitemap.xml` para SEO |
+| **Content Collections** | Sección de tutoriales gestionada con archivos `.md` |
 | **GitHub Actions** | Build y despliegue automático al hacer push en `main` |
 | **GitHub Pages** | Alojamiento del sitio estático |
 | **Cloudflare** | DNS, proxy, SSL/TLS y ofuscación de email |
@@ -60,11 +64,13 @@ En el despliegue (CI) estos valores se inyectan desde los **secretos y variables
 /
 ├── public/                 → favicon y assets estáticos (imágenes, OG)
 ├── src/
-│   ├── layouts/            → Base.astro (cabecera, navegación, pie, meta)
-│   ├── components/         → Nav, Footer, ProjectCard, Hero, ...
-│   ├── pages/              → index, sobre-mi, proyectos, contacto
-│   ├── scripts/            → main.ts (menú) y github.ts (API + cache)
-│   └── styles/             → global.css (variables, componentes, responsive)
+│   ├── layouts/            → Base.astro (cabecera, navegación, pie, meta y script de tema)
+│   ├── components/         → Nav (menú móvil + toggle de tema), Footer
+│   ├── pages/              → index, sobre-mi, proyectos, contacto y tutoriales
+│   ├── content/            → colección de tutoriales (Content Collections)
+│   ├── data/               → tutoriales.ts (series y consultas de contenido)
+│   ├── scripts/            → github.ts (API + cache) y reveal.ts (scroll reveal)
+│   └── styles/             → global.css (variables, componentes, responsive) y prose.css
 ├── .github/workflows/      → deploy.yml (build + deploy a Pages)
 ├── .env.example            → plantilla de variables de entorno
 ├── astro.config.mjs
@@ -76,7 +82,8 @@ En el despliegue (CI) estos valores se inyectan desde los **secretos y variables
 
 - `/` — Inicio: hero con resumen y accesos rápidos
 - `/sobre-mi` — Bio, habilidades y trayectoria
-- `/proyectos` — Grid de proyectos cargados desde la API de GitHub
+- `/proyectos` — Grid de proyectos desde la API de GitHub, con filtro por tecnología y orden
+- `/tutoriales` — Guías paso a paso sobre cómo se construyó esta web
 - `/contacto` — Contacto y enlaces a redes sociales
 
 ## Despliegue
@@ -95,11 +102,10 @@ En el despliegue (CI) estos valores se inyectan desde los **secretos y variables
 - **Edición directa de archivos fuente**: el contenido vive en los `.astro`/`.md`, no en una base de datos.
 - **Editor web de GitHub como panel**: editar o crear archivos desde `github.com` → commit → el CI reconstruye y publica automáticamente (incluso desde el móvil).
 - **Proyectos automáticos**: crear un repositorio nuevo en GitHub lo añade a la web sin tocar nada.
-- **Contenido estructurado (futuro)**: blog con Content Collections (crear una entrada = añadir un archivo `.md`).
+- **Tutoriales con Content Collections**: cada entrada de `/tutoriales` es un archivo `.md` en `src/content/tutoriales`; crear una nueva con su `order` y `part` la añade a la serie automáticamente.
 
 ## Futuro
 
-- Blog / artículos con Content Collections.
 - Internacionalización (i18n): el HTML se marca con `lang="es"` y la estructura queda preparada para añadir traducciones.
 
 ## Licencia
