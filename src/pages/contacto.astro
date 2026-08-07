@@ -47,29 +47,31 @@ const email = import.meta.env.SITE_EMAIL ?? '';
 </Base>
 
 <script>
-  const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
-  const note = document.querySelector('[data-form-note]');
+  document.addEventListener('astro:page-load', () => {
+    const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
+    const note = document.querySelector('[data-form-note]');
 
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const name = data.get('name');
-    const fromEmail = data.get('email');
-    const subject = data.get('subject');
-    const message = data.get('message');
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const name = data.get('name');
+      const fromEmail = data.get('email');
+      const subject = data.get('subject');
+      const message = data.get('message');
 
-    if (!name || !fromEmail || !subject || !message) {
-      if (note) {
-        note.textContent = 'Por favor, rellena todos los campos.';
+      if (!name || !fromEmail || !subject || !message) {
+        if (note) {
+          note.textContent = 'Por favor, rellena todos los campos.';
+        }
+        return;
       }
-      return;
-    }
 
-    const mailto = `mailto:${form.dataset.contactEmail}?subject=${encodeURIComponent(
-      String(subject)
-    )}&body=${encodeURIComponent(`${String(message)}\n\n— ${String(name)} (${String(fromEmail)})`)}`;
+      const mailto = `mailto:${form.dataset.contactEmail}?subject=${encodeURIComponent(
+        String(subject)
+      )}&body=${encodeURIComponent(`${String(message)}\n\n— ${String(name)} (${String(fromEmail)})`)}`;
 
-    window.location.href = mailto;
+      window.location.href = mailto;
+    });
   });
 </script>
 

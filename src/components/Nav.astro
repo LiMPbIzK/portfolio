@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const base = import.meta.env.BASE_URL;
 
@@ -17,18 +19,30 @@ const currentPath = path === '' ? '/' : `/${path}`;
 <header class="site-header">
   <div class="container nav-wrap">
     <a class="brand" href={base}>{siteName}</a>
-    <button
-      class="nav-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="nav-menu"
-      data-nav-toggle
-    >
-      <span class="visually-hidden" data-nav-toggle-label>Abrir menú</span>
-      <span class="nav-toggle-line" aria-hidden="true"></span>
-      <span class="nav-toggle-line" aria-hidden="true"></span>
-      <span class="nav-toggle-line" aria-hidden="true"></span>
-    </button>
+    <div class="nav-actions">
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-pressed="false"
+        aria-label="Cambiar entre tema claro y oscuro"
+      >
+        <Icon class="theme-icon icon-sun" name="lucide:sun" aria-hidden="true" />
+        <Icon class="theme-icon icon-moon" name="lucide:moon" aria-hidden="true" />
+      </button>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        data-nav-toggle
+      >
+        <span class="visually-hidden" data-nav-toggle-label>Abrir menú</span>
+        <span class="nav-toggle-line" aria-hidden="true"></span>
+        <span class="nav-toggle-line" aria-hidden="true"></span>
+        <span class="nav-toggle-line" aria-hidden="true"></span>
+      </button>
+    </div>
     <nav id="nav-menu" class="nav-menu" aria-label="Principal">
       <ul>
         {
@@ -50,34 +64,70 @@ const currentPath = path === '' ? '/' : `/${path}`;
 </header>
 
 <script>
-  const toggle = document.querySelector('[data-nav-toggle]') as HTMLElement | null;
-  const menu = document.querySelector('#nav-menu');
-  const label = document.querySelector('[data-nav-toggle-label]');
-
-  function isOpen(): boolean {
-    return toggle?.getAttribute('aria-expanded') === 'true';
+  function resolveTheme(): string {
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem('theme');
+    } catch {}
+    if (stored === 'dark' || stored === 'light') return stored;
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function setOpen(open: boolean): void {
-    if (!toggle) return;
-    toggle.setAttribute('aria-expanded', String(open));
-    menu?.classList.toggle('open', open);
-    if (label) {
-      label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
-    }
+  function applyStoredTheme(): void {
+    document.documentElement.setAttribute('data-theme', resolveTheme());
   }
 
-  toggle?.addEventListener('click', () => setOpen(!isOpen()));
+  document.addEventListener('astro:after-swap', applyStoredTheme);
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && isOpen()) {
-      setOpen(false);
-      toggle?.focus();
+  document.addEventListener('astro:page-load', () => {
+    applyStoredTheme();
+
+    const toggle = document.querySelector('[data-nav-toggle]') as HTMLElement | null;
+    const menu = document.querySelector('#nav-menu');
+    const label = document.querySelector('[data-nav-toggle-label]');
+    const themeToggle = document.querySelector('[data-theme-toggle]') as HTMLElement | null;
+
+    function isOpen(): boolean {
+      return toggle?.getAttribute('aria-expanded') === 'true';
     }
-  });
 
-  menu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => setOpen(false));
+    function setOpen(open: boolean): void {
+      if (!toggle) return;
+      toggle.setAttribute('aria-expanded', String(open));
+      menu?.classList.toggle('open', open);
+      if (label) {
+        label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+      }
+    }
+
+    function applyTheme(theme: string): void {
+      document.documentElement.setAttribute('data-theme', theme);
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {}
+      themeToggle?.setAttribute('aria-pressed', String(theme === 'dark'));
+    }
+
+    themeToggle?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') ?? 'light';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const initialTheme = document.documentElement.getAttribute('data-theme') ?? 'light';
+    themeToggle?.setAttribute('aria-pressed', String(initialTheme === 'dark'));
+
+    toggle?.addEventListener('click', () => setOpen(!isOpen()));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        toggle?.focus();
+      }
+    });
+
+    menu?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
   });
 </script>
 
@@ -110,6 +160,38 @@ const currentPath = path === '' ? '/' : `/${path}`;
   .brand:hover {
     color: var(--color-accent);
     text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    transition:
+      color var(--transition),
+      border-color var(--transition);
+
+    &:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+  }
+
+  .theme-icon {
+    width: 1.2em;
+    height: 1.2em;
   }
 
   .nav-toggle {

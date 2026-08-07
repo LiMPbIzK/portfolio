@@ -34,6 +34,22 @@
   color-scheme: light;
 }
 
+[data-theme='dark'] {
+  --color-bg: #0b1220;
+  --color-surface: #111a2e;
+  --color-text: #e5e9f0;
+  --color-text-muted: #9aa7bd;
+  --color-accent: #60a5fa;
+  --color-accent-dark: color-mix(in srgb, var(--color-accent) 72%, #000000);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 18%, #111a2e);
+  --color-border: #24304a;
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
 @layer base {
   *,
   *::before,
@@ -136,6 +152,22 @@
 }
 
 @layer components {
+  .theme-toggle .icon-sun {
+    display: none;
+  }
+
+  .theme-toggle .icon-moon {
+    display: block;
+  }
+
+  [data-theme='dark'] .theme-toggle .icon-sun {
+    display: block;
+  }
+
+  [data-theme='dark'] .theme-toggle .icon-moon {
+    display: none;
+  }
+
   .btn {
     display: inline-flex;
     align-items: center;
@@ -311,4 +343,18 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
+[data-theme='dark'] .astro-code,
+[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+[data-theme='dark'] .astro-code {
+  background-color: var(--shiki-dark-bg) !important;
 }

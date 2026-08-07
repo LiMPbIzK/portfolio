@@ -67,7 +67,7 @@
 .prose :not(pre) > code {
   padding: 0.15em 0.4em;
   background-color: var(--color-accent-soft);
-  color: var(--color-accent-dark);
+  color: var(--color-accent);
   border-radius: 6px;
   font-family: var(--font-mono);
   font-size: 0.875em;
