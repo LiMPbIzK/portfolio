@@ -1,0 +1,161 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
+const email = import.meta.env.SITE_EMAIL ?? '';
+const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
+const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
+
+const socials = [
+  githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
+  linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
+].filter(Boolean);
+---
+
+<Base title="Contacto" description={`Ponte en contacto con ${siteName}.`}>
+  <section class="page container">
+    <h1>Contacto</h1>
+    <p class="lead">
+      Si quieres hablarme de un proyecto o una oportunidad, escríbeme.
+    </p>
+
+    <form
+      class="contact-form"
+      data-contact-form
+      data-contact-email={email}
+      novalidate
+    >
+      <div class="field">
+        <label for="name">Nombre</label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for="contact-email">Tu email</label>
+        <input
+          id="contact-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="subject">Asunto</label>
+        <input id="subject" name="subject" type="text" required />
+      </div>
+      <div class="field">
+        <label for="message">Mensaje</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit">Enviar</button>
+      <p class="form-note" data-form-note role="status"></p>
+    </form>
+
+    {
+      socials.length ? (
+        <section class="socials" aria-labelledby="socials-title">
+          <h2 id="socials-title">Redes</h2>
+          <ul>
+            {socials.map((social) => (
+              <li>
+                <a href={social.href} rel="me">
+                  {social.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null
+    }
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector('[data-contact-form]');
+  const note = document.querySelector('[data-form-note]');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const name = data.get('name');
+    const fromEmail = data.get('email');
+    const subject = data.get('subject');
+    const message = data.get('message');
+
+    if (!name || !fromEmail || !subject || !message) {
+      if (note) {
+        note.textContent = 'Por favor, rellena todos los campos.';
+      }
+      return;
+    }
+
+    const mailto = `mailto:${form.dataset.contactEmail}?subject=${encodeURIComponent(
+      String(subject)
+    )}&body=${encodeURIComponent(`${String(message)}\n\n— ${String(name)} (${String(fromEmail)})`)}`;
+
+    window.location.href = mailto;
+  });
+</script>
+
+<style>
+  .page {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-block: var(--space-5) var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+  }
+
+  .contact-form {
+    margin-top: var(--space-4);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+
+  .field label {
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  .field input,
+  .field textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    transition: border-color var(--transition);
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  .form-note {
+    color: var(--color-text-muted);
+  }
+
+  .socials {
+    margin-top: var(--space-5);
+  }
+
+  .socials ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
+const siteBio = import.meta.env.SITE_BIO ?? '';
+const base = import.meta.env.BASE_URL;
+
+const skills = ['HTML', 'CSS', 'JavaScript', 'Python', 'Git', 'GitHub'];
+---
+
+<Base title="Sobre mí" description={`Conoce más sobre ${siteName}.`}>
+  <section class="page container">
+    <h1>Sobre mí</h1>
+    {siteBio ? <p class="lead">{siteBio}</p> : null}
+    <p>
+      Me dedico al desarrollo y al soporte técnico informático, con el objetivo
+      constante de ampliar mis conocimientos sobre desarrollo de software.
+      Este espacio reúne los proyectos en los que voy trabajando.
+    </p>
+
+    <section class="skills" aria-labelledby="skills-title">
+      <h2 id="skills-title">Tecnologías</h2>
+      <ul class="skills-list">
+        {
+          skills.map((skill) => (
+            <li class="skill-chip">{skill}</li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <p>
+      ¿Hablamos? Escríbeme desde la página de{' '}
+      <a href={`${base}contacto`}>contacto</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .page {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-block: var(--space-5) var(--space-4);
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+  }
+
+  .skills {
+    margin-top: var(--space-5);
+  }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .skill-chip {
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+</style>

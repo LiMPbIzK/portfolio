@@ -1,17 +1,61 @@
 ---
+import Base from '../layouts/Base.astro';
 
+const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
+const siteRole = import.meta.env.SITE_ROLE ?? '';
+const siteBio = import.meta.env.SITE_BIO ?? '';
+const siteObjective = import.meta.env.SITE_OBJECTIVE ?? '';
+const base = import.meta.env.BASE_URL;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base title="Inicio" description={siteBio}>
+  <section class="hero container">
+    <h1 class="hero-title">Hola, soy {siteName}</h1>
+    {siteRole ? <p class="hero-role">{siteRole}</p> : null}
+    {siteBio ? <p class="hero-bio">{siteBio}</p> : null}
+    {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
+    <div class="hero-actions">
+      <a class="btn btn-primary" href={`${base}proyectos`}>Ver proyectos</a>
+      <a class="btn btn-secondary" href={`${base}contacto`}>Contacto</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-6) var(--space-5);
+    max-width: 760px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    margin-bottom: var(--space-2);
+  }
+
+  .hero-role {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+  }
+
+  .hero-bio {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+  }
+
+  .hero-objective {
+    color: var(--color-text-muted);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+</style>
