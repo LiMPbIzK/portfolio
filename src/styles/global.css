@@ -10,6 +10,7 @@
 
   --font-heading: 'Sora', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
   --container-max: 1100px;
   --space-1: 0.5rem;

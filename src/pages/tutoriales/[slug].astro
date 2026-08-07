@@ -1,0 +1,181 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPublishedTutorials, SERIES_INFO } from '../../data/tutorials';
+import { render } from 'astro:content';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const tutorials = await getPublishedTutorials();
+  return tutorials.map((tutorial) => ({
+    params: { slug: tutorial.id },
+    props: { tutorial },
+  }));
+}
+
+const { tutorial } = Astro.props;
+const { Content } = await render(tutorial);
+
+const tutorials = await getPublishedTutorials();
+const currentIndex = tutorials.findIndex((t) => t.id === tutorial.id);
+const prev = currentIndex > 0 ? tutorials[currentIndex - 1] : undefined;
+const next = currentIndex >= 0 && currentIndex < tutorials.length - 1 ? tutorials[currentIndex + 1] : undefined;
+
+const series = tutorial.data.series ? SERIES_INFO[tutorial.data.series] : undefined;
+const base = import.meta.env.BASE_URL;
+const formattedDate = tutorial.data.date.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Base title={tutorial.data.title} description={tutorial.data.description}>
+  <article class="article container">
+    <nav class="breadcrumbs" aria-label="Ruta">
+      <a href={`${base}tutoriales`}>Tutoriales</a>
+      {series ? <span aria-hidden="true"> / </span> : null}
+      {series ? <span>{series.title}</span> : null}
+    </nav>
+
+    <header class="article-header">
+      {tutorial.data.part ? (
+        <p class="article-part">Parte {tutorial.data.part} de {tutorials.length}</p>
+      ) : null}
+      <h1>{tutorial.data.title}</h1>
+      <p class="article-meta">
+        <time datetime={tutorial.data.date.toISOString()}>{formattedDate}</time>
+        {tutorial.data.tags.length ? (
+          <span class="tags">
+            {tutorial.data.tags.map((tag) => <span class="tag">#{tag}</span>)}
+          </span>
+        ) : null}
+      </p>
+      <p class="article-description">{tutorial.data.description}</p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <nav class="pagination" aria-label="Navegación entre partes">
+      {prev ? (
+        <a class="pagination-link" href={`${base}tutoriales/${prev.id}/`}>
+          <span class="pagination-label">← Anterior</span>
+          <span class="pagination-title">{prev.data.title}</span>
+        </a>
+      ) : (
+        <span class="pagination-link is-empty" aria-hidden="true"></span>
+      )}
+      {next ? (
+        <a class="pagination-link is-next" href={`${base}tutoriales/${next.id}/`}>
+          <span class="pagination-label">Siguiente →</span>
+          <span class="pagination-title">{next.data.title}</span>
+        </a>
+      ) : (
+        <span class="pagination-link is-empty" aria-hidden="true"></span>
+      )}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .article {
+    max-width: 820px;
+    margin-inline: auto;
+    padding-block: var(--space-4) var(--space-5);
+  }
+
+  .breadcrumbs {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .article-header {
+    margin-bottom: var(--space-4);
+  }
+
+  .article-part {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .tags {
+    display: inline-flex;
+    gap: var(--space-1);
+  }
+
+  .tag {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+  }
+
+  .article-description {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .pagination-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 48%;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .pagination-link:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+  }
+
+  .pagination-link.is-next {
+    align-items: flex-end;
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .pagination-link.is-empty {
+    visibility: hidden;
+  }
+
+  .pagination-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .pagination-title {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+</style>
