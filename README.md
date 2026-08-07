@@ -49,6 +49,7 @@ Copia `.env.example` a `.env` y rellena los valores. El archivo `.env` está en 
 | `SITE_GITHUB_USER` | Usuario de GitHub (para la API) | `tu-usuario` |
 | `SITE_GITHUB_URL` | Perfil de GitHub | `https://github.com/tu-usuario` |
 | `SITE_LINKEDIN_URL` | Perfil de LinkedIn | `https://www.linkedin.com/in/tu-usuario/` |
+| `SITE_CV_URL` | URL pública del CV descargable (opcional) | `https://.../cv.pdf` |
 | `SITE_URL` | URL pública de producción | `https://tudominio.com` |
 
 En el despliegue (CI) estos valores se inyectan desde los **secretos y variables de GitHub Actions** (Settings → Secrets and variables → Actions). El repositorio público solo contiene placeholders (`.env.example`) y los nombres de los secretos, nunca datos personales.

@@ -43,6 +43,7 @@ jobs:
           SITE_GITHUB_USER: ${{ secrets.SITE_GITHUB_USER }}
           SITE_GITHUB_URL: ${{ secrets.SITE_GITHUB_URL }}
           SITE_LINKEDIN_URL: ${{ secrets.SITE_LINKEDIN_URL }}
+          SITE_CV_URL: ${{ secrets.SITE_CV_URL }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -5,6 +5,7 @@ const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const siteRole = import.meta.env.SITE_ROLE ?? '';
 const siteBio = import.meta.env.SITE_BIO ?? '';
 const siteObjective = import.meta.env.SITE_OBJECTIVE ?? '';
+const siteCvUrl = import.meta.env.SITE_CV_URL ?? '';
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -16,6 +17,7 @@ const base = import.meta.env.BASE_URL;
     {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
     <div class="hero-actions">
       <a class="btn btn-primary" href={`${base}proyectos`}>Ver proyectos</a>
+      {siteCvUrl ? <a class="btn btn-secondary" href={siteCvUrl}>Descargar CV</a> : null}
       <a class="btn btn-secondary" href={`${base}contacto`}>Contacto</a>
     </div>
   </section>
