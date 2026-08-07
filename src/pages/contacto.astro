@@ -3,13 +3,6 @@ import Base from '../layouts/Base.astro';
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const email = import.meta.env.SITE_EMAIL ?? '';
-const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
-const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
-
-const socials = [
-  githubUrl ? { href: githubUrl, label: 'GitHub' } : null,
-  linkedinUrl ? { href: linkedinUrl, label: 'LinkedIn' } : null,
-].filter((social): social is { href: string; label: string } => Boolean(social));
 ---
 
 <Base title="Contacto" description={`Ponte en contacto con ${siteName}.`}>
@@ -50,23 +43,6 @@ const socials = [
       <button class="btn btn-primary" type="submit">Enviar</button>
       <p class="form-note" data-form-note role="status"></p>
     </form>
-
-    {
-      socials.length ? (
-        <section class="socials" aria-labelledby="socials-title">
-          <h2 id="socials-title">Redes</h2>
-          <ul>
-            {socials.map((social) => (
-              <li>
-                <a href={social.href} rel="me">
-                  {social.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null
-    }
   </section>
 </Base>
 
@@ -145,17 +121,5 @@ const socials = [
 
   .form-note {
     color: var(--color-text-muted);
-  }
-
-  .socials {
-    margin-top: var(--space-5);
-  }
-
-  .socials ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: var(--space-3);
   }
 </style>
