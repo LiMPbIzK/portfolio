@@ -1,30 +1,37 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getPublishedTutorials, SERIES_INFO } from '../../data/tutorials';
+import { getPublishedTutorials, SERIES_INFO, normalizeId } from '../../data/tutorials';
 import { render } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { t, getLangTag, type Locale } from '../../i18n/utils';
 import '../../styles/prose.css';
 
 export async function getStaticPaths() {
-  const tutorials = await getPublishedTutorials();
-  return tutorials.map((tutorial) => ({
-    params: { slug: tutorial.id },
-    props: { tutorial },
+  const es = await getPublishedTutorials('es');
+  return es.map((entry) => ({
+    params: { slug: normalizeId(entry.id) },
   }));
 }
 
-const { tutorial } = Astro.props;
+const locale = (Astro.currentLocale ?? 'es') as Locale;
+const slug = Astro.params.slug ?? '';
+
+const tutorials = await getPublishedTutorials(locale);
+let tutorial = tutorials.find((entry) => normalizeId(entry.id) === slug);
+if (!tutorial) {
+  const es = await getPublishedTutorials('es');
+  tutorial = es.find((entry) => normalizeId(entry.id) === slug);
+}
+if (!tutorial) {
+  throw new Error(`Tutorial no encontrado: ${slug}`);
+}
 const { Content } = await render(tutorial);
 
-const locale = (Astro.currentLocale ?? 'es') as Locale;
-
-const tutorials = await getPublishedTutorials();
 const currentIndex = tutorials.findIndex((entry) => entry.id === tutorial.id);
 const prev = currentIndex > 0 ? tutorials[currentIndex - 1] : undefined;
 const next = currentIndex >= 0 && currentIndex < tutorials.length - 1 ? tutorials[currentIndex + 1] : undefined;
 
-const series = tutorial.data.series ? SERIES_INFO[tutorial.data.series] : undefined;
+const series = tutorial.data.series ? SERIES_INFO[tutorial.data.series][locale] : undefined;
 const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), {
   year: 'numeric',
   month: 'long',
@@ -64,7 +71,7 @@ const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), 
 
     <nav class="pagination" aria-label="Navegación entre partes">
       {prev ? (
-        <a class="pagination-link" href={getRelativeLocaleUrl(locale, `tutoriales/${prev.id}`)}>
+        <a class="pagination-link" href={getRelativeLocaleUrl(locale, `tutoriales/${normalizeId(prev.id)}`)}>
           <span class="pagination-label">{t(locale, 'tutorials.prev')}</span>
           <span class="pagination-title">{prev.data.title}</span>
         </a>
@@ -72,7 +79,7 @@ const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), 
         <span class="pagination-link is-empty" aria-hidden="true"></span>
       )}
       {next ? (
-        <a class="pagination-link is-next" href={getRelativeLocaleUrl(locale, `tutoriales/${next.id}`)}>
+        <a class="pagination-link is-next" href={getRelativeLocaleUrl(locale, `tutoriales/${normalizeId(next.id)}`)}>
           <span class="pagination-label">{t(locale, 'tutorials.next')}</span>
           <span class="pagination-title">{next.data.title}</span>
         </a>

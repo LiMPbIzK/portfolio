@@ -1,23 +1,23 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getPublishedTutorials, SERIES_INFO } from '../../data/tutorials';
+import { getPublishedTutorials, SERIES_INFO, normalizeId } from '../../data/tutorials';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { t, getLangTag, type Locale } from '../../i18n/utils';
 
 const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const tutorials = await getPublishedTutorials();
+const tutorials = await getPublishedTutorials(locale);
 
 const seriesEntries = Object.keys(SERIES_INFO)
   .map((id) => ({
     id,
-    info: SERIES_INFO[id],
-    parts: tutorials.filter((t) => t.data.series === id),
+    info: SERIES_INFO[id][locale],
+    parts: tutorials.filter((entry) => entry.data.series === id),
   }))
   .filter((s) => s.parts.length > 0);
 
-const standalone = tutorials.filter((t) => !t.data.series);
+const standalone = tutorials.filter((tutorial) => !tutorial.data.series);
 ---
 
 <Base title={t(locale, 'meta.tutorialsTitle')} description={t(locale, 'meta.tutorialsDescription', { name: siteName })}>
@@ -40,7 +40,7 @@ const standalone = tutorials.filter((t) => !t.data.series);
             {
               series.parts.map((part, index) => (
                 <li>
-                  <a class="part-card" href={getRelativeLocaleUrl(locale, `tutoriales/${part.id}`)}>
+                  <a class="part-card" href={getRelativeLocaleUrl(locale, `tutoriales/${normalizeId(part.id)}`)}>
                     <span class="part-number">
                       {String(index + 1).padStart(2, '0')}
                     </span>
@@ -65,7 +65,7 @@ const standalone = tutorials.filter((t) => !t.data.series);
             {
               standalone.map((tutorial) => (
                 <li>
-                  <a href={getRelativeLocaleUrl(locale, `tutoriales/${tutorial.id}`)}>{tutorial.data.title}</a>
+                  <a href={getRelativeLocaleUrl(locale, `tutoriales/${normalizeId(tutorial.id)}`)}>{tutorial.data.title}</a>
                   <p>{tutorial.data.description}</p>
                 </li>
               ))
