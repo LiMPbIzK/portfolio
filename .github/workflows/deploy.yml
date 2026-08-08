@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check (tipos + paridad i18n)
+        run: npm run check
+
       - name: Build
         run: npm run build
         env:
@@ -39,6 +42,9 @@ jobs:
           SITE_ROLE: ${{ secrets.SITE_ROLE }}
           SITE_BIO: ${{ secrets.SITE_BIO }}
           SITE_OBJECTIVE: ${{ secrets.SITE_OBJECTIVE }}
+          SITE_ROLE_EN: ${{ secrets.SITE_ROLE_EN }}
+          SITE_BIO_EN: ${{ secrets.SITE_BIO_EN }}
+          SITE_OBJECTIVE_EN: ${{ secrets.SITE_OBJECTIVE_EN }}
           SITE_EMAIL: ${{ secrets.SITE_EMAIL }}
           SITE_GITHUB_USER: ${{ secrets.SITE_GITHUB_USER }}
           SITE_GITHUB_URL: ${{ secrets.SITE_GITHUB_URL }}
