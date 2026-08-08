@@ -1,32 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Locale } from '../i18n/utils';
+import { profileText } from '../i18n/env';
+
+const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const siteRole = import.meta.env.SITE_ROLE ?? '';
-const siteBio = import.meta.env.SITE_BIO ?? '';
-const siteObjective = import.meta.env.SITE_OBJECTIVE ?? '';
+const siteRole = profileText(locale, 'ROLE');
+const siteBio = profileText(locale, 'BIO');
+const siteObjective = profileText(locale, 'OBJECTIVE');
 const siteCvUrl = import.meta.env.SITE_CV_URL ?? '';
-const base = import.meta.env.BASE_URL;
 ---
 
-<Base title="Inicio" description={siteBio}>
+<Base title={t(locale, 'meta.homeTitle')} description={siteBio}>
   <section class="hero container">
     <h1 class="hero-title">
-      Hola, soy <span class="gradient-text">{siteName}</span>
+      {t(locale, 'hero.greeting')} <span class="gradient-text">{siteName}</span>
     </h1>
     {siteRole ? <p class="hero-role">{siteRole}</p> : null}
     {siteBio ? <p class="hero-bio">{siteBio}</p> : null}
     {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
     <div class="hero-actions">
-      <a class="btn btn-primary" href={`${base}proyectos`}>Ver proyectos</a>
+      <a class="btn btn-primary" href={getRelativeLocaleUrl(locale, 'proyectos')}>{t(locale, 'hero.viewProjects')}</a>
       {siteCvUrl ? (
         <a class="btn btn-secondary" href={siteCvUrl}>
           <Icon class="btn-icon" name="lucide:download" aria-hidden="true" />
-          Descargar CV
+          {t(locale, 'hero.downloadCv')}
         </a>
       ) : null}
-      <a class="btn btn-secondary" href={`${base}contacto`}>Contacto</a>
+      <a class="btn btn-secondary" href={getRelativeLocaleUrl(locale, 'contacto')}>{t(locale, 'nav.contact')}</a>
     </div>
   </section>
 
@@ -36,14 +40,10 @@ const base = import.meta.env.BASE_URL;
     data-gsap="parallax"
   >
     <div>
-      <h2 id="tutorials-cta-title">¿Quieres aprender cómo lo hice?</h2>
-      <p>
-        Soy una persona curiosa por naturaleza. En la sección de tutoriales te
-        explico paso a paso cómo crear tu propia web personal con Astro, GitHub
-        Pages y un dominio en Cloudflare.
-      </p>
+      <h2 id="tutorials-cta-title">{t(locale, 'cta.tutorialsTitle')}</h2>
+      <p>{t(locale, 'cta.tutorialsText')}</p>
     </div>
-    <a class="btn btn-primary" href={`${base}tutoriales`}>Ver tutoriales</a>
+    <a class="btn btn-primary" href={getRelativeLocaleUrl(locale, 'tutoriales')}>{t(locale, 'cta.viewTutorials')}</a>
   </section>
 </Base>
 

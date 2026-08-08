@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import { getPublishedTutorials, SERIES_INFO } from '../../data/tutorials';
 import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, getLangTag, type Locale } from '../../i18n/utils';
 import '../../styles/prose.css';
 
 export async function getStaticPaths() {
@@ -15,14 +17,15 @@ export async function getStaticPaths() {
 const { tutorial } = Astro.props;
 const { Content } = await render(tutorial);
 
+const locale = (Astro.currentLocale ?? 'es') as Locale;
+
 const tutorials = await getPublishedTutorials();
-const currentIndex = tutorials.findIndex((t) => t.id === tutorial.id);
+const currentIndex = tutorials.findIndex((entry) => entry.id === tutorial.id);
 const prev = currentIndex > 0 ? tutorials[currentIndex - 1] : undefined;
 const next = currentIndex >= 0 && currentIndex < tutorials.length - 1 ? tutorials[currentIndex + 1] : undefined;
 
 const series = tutorial.data.series ? SERIES_INFO[tutorial.data.series] : undefined;
-const base = import.meta.env.BASE_URL;
-const formattedDate = tutorial.data.date.toLocaleDateString('es-ES', {
+const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -32,14 +35,16 @@ const formattedDate = tutorial.data.date.toLocaleDateString('es-ES', {
 <Base title={tutorial.data.title} description={tutorial.data.description}>
   <article class="article container" data-reveal>
     <nav class="breadcrumbs" aria-label="Ruta">
-      <a href={`${base}tutoriales`}>Tutoriales</a>
+      <a href={getRelativeLocaleUrl(locale, 'tutoriales')}>{t(locale, 'tutorials.title')}</a>
       {series ? <span aria-hidden="true"> / </span> : null}
       {series ? <span>{series.title}</span> : null}
     </nav>
 
     <header class="article-header">
       {tutorial.data.part ? (
-        <p class="article-part">Parte {tutorial.data.part} de {tutorials.length}</p>
+        <p class="article-part">
+          {t(locale, 'tutorials.partOf', { n: tutorial.data.part, total: tutorials.length })}
+        </p>
       ) : null}
       <h1>{tutorial.data.title}</h1>
       <p class="article-meta">
@@ -59,16 +64,16 @@ const formattedDate = tutorial.data.date.toLocaleDateString('es-ES', {
 
     <nav class="pagination" aria-label="Navegación entre partes">
       {prev ? (
-        <a class="pagination-link" href={`${base}tutoriales/${prev.id}/`}>
-          <span class="pagination-label">← Anterior</span>
+        <a class="pagination-link" href={getRelativeLocaleUrl(locale, `tutoriales/${prev.id}`)}>
+          <span class="pagination-label">{t(locale, 'tutorials.prev')}</span>
           <span class="pagination-title">{prev.data.title}</span>
         </a>
       ) : (
         <span class="pagination-link is-empty" aria-hidden="true"></span>
       )}
       {next ? (
-        <a class="pagination-link is-next" href={`${base}tutoriales/${next.id}/`}>
-          <span class="pagination-label">Siguiente →</span>
+        <a class="pagination-link is-next" href={getRelativeLocaleUrl(locale, `tutoriales/${next.id}`)}>
+          <span class="pagination-label">{t(locale, 'tutorials.next')}</span>
           <span class="pagination-title">{next.data.title}</span>
         </a>
       ) : (

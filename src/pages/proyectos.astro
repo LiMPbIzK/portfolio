@@ -1,28 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import { t, type Locale } from '../i18n/utils';
+
+const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 ---
 
-<Base title="Proyectos" description="Proyectos alojados en GitHub.">
+<Base title={t(locale, 'meta.projectsTitle')} description={t(locale, 'meta.projectsDescription')}>
   <section class="page container">
-    <h1 data-reveal>Proyectos</h1>
-    <p class="lead" data-reveal>Mis proyectos públicos en GitHub.</p>
+    <h1 data-reveal>{t(locale, 'projects.title')}</h1>
+    <p class="lead" data-reveal>{t(locale, 'projects.lead')}</p>
 
     <div class="projects-toolbar" data-projects-toolbar hidden>
       <div class="filter-chips" data-filter-chips role="group" aria-label="Filtrar por lenguaje"></div>
       <div class="sort-field">
-        <label for="sort-select">Ordenar</label>
+        <label for="sort-select">{t(locale, 'projects.sort')}</label>
         <select id="sort-select" data-sort-select>
-          <option value="updated">Recientes</option>
-          <option value="stars">Estrellas</option>
-          <option value="name">Nombre</option>
+          <option value="updated">{t(locale, 'projects.sortUpdated')}</option>
+          <option value="stars">{t(locale, 'projects.sortStars')}</option>
+          <option value="name">{t(locale, 'projects.sortName')}</option>
         </select>
       </div>
     </div>
 
     <div id="projects" class="projects" data-username={siteUser} data-reveal aria-live="polite">
-      <p class="projects-status" role="status">Cargando proyectos…</p>
+      <p class="projects-status" role="status">{t(locale, 'projects.loading')}</p>
     </div>
   </section>
 </Base>
@@ -30,6 +33,11 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 <script>
   import { getRepos } from '../scripts/github';
   import type { GitHubRepo } from '../scripts/github';
+  import { t, type Locale } from '../i18n/utils';
+
+  function currentLocale(): Locale {
+    return (document.documentElement.getAttribute('data-locale') ?? 'es') as Locale;
+  }
 
   let repos: GitHubRepo[] = [];
   let language = 'all';
@@ -89,16 +97,24 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
               ? `<span class="project-language"><span class="language-dot" aria-hidden="true"></span>${escapeHtml(repo.language)}</span>`
               : ''
           }
-          ${repo.stargazers_count > 0 ? `<span aria-label="${repo.stargazers_count} estrellas">★ ${repo.stargazers_count}</span>` : ''}
-          ${repo.forks_count > 0 ? `<span aria-label="${repo.forks_count} forks">⑂ ${repo.forks_count}</span>` : ''}
+          ${
+            repo.stargazers_count > 0
+              ? `<span aria-label="${escapeHtml(t(currentLocale(), 'projects.stars', { count: repo.stargazers_count }))}">★ ${repo.stargazers_count}</span>`
+              : ''
+          }
+          ${
+            repo.forks_count > 0
+              ? `<span aria-label="${escapeHtml(t(currentLocale(), 'projects.forks', { count: repo.forks_count }))}">⑂ ${repo.forks_count}</span>`
+              : ''
+          }
         </div>
         <div class="project-links">
           ${
             repo.homepage
-              ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Demo ${arrowSvg}</a>`
+              ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), 'projects.demo')} ${arrowSvg}</a>`
               : ''
           }
-          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">Código ${arrowSvg}</a>
+          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), 'projects.code')} ${arrowSvg}</a>
         </div>
       </article>
     `;
@@ -122,8 +138,8 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     if (sorted.length === 0) {
       setStatus(
         language === 'all'
-          ? 'Todavía no hay proyectos públicos.'
-          : `No hay proyectos en ${escapeHtml(language)}.`
+          ? t(currentLocale(), 'projects.none')
+          : t(currentLocale(), 'projects.noneForLang', { lang: language })
       );
       return;
     }
@@ -138,7 +154,10 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     const languages = Array.from(new Set(repos.map((repo) => repo.language).filter(Boolean))).sort();
     chips.innerHTML = '';
 
-    const options: [string, string][] = [['all', 'Todos'], ...languages.map((lang) => [lang, lang] as [string, string])];
+    const options: [string, string][] = [
+      ['all', t(currentLocale(), 'projects.all')],
+      ...languages.map((lang) => [lang, lang] as [string, string]),
+    ];
     for (const [value, label] of options) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -171,7 +190,7 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
     if (container?.querySelector('.project-card')) return;
 
     if (!username) {
-      setStatus('No se ha configurado el usuario de GitHub.');
+      setStatus(t(currentLocale(), 'projects.noUser'));
       return;
     }
 
@@ -179,7 +198,7 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
       const all = await getRepos(username);
       repos = all.filter((repo) => !repo.fork && !repo.archived);
       if (repos.length === 0) {
-        setStatus('Todavía no hay proyectos públicos.');
+        setStatus(t(currentLocale(), 'projects.none'));
         return;
       }
       bindSort();
@@ -190,10 +209,10 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
         const retry = document.createElement('button');
         retry.type = 'button';
         retry.className = 'btn btn-secondary';
-        retry.textContent = 'Reintentar';
+        retry.textContent = t(currentLocale(), 'projects.retry');
         retry.addEventListener('click', load);
 
-        container.textContent = 'No se pudieron cargar los proyectos. ';
+        container.textContent = t(currentLocale(), 'projects.error');
         container.appendChild(retry);
       }
     }

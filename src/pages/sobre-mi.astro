@@ -1,14 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Locale, type TranslationKey } from '../i18n/utils';
+import { profileText } from '../i18n/env';
+
+const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const siteBio = import.meta.env.SITE_BIO ?? '';
-const base = import.meta.env.BASE_URL;
+const siteBio = profileText(locale, 'BIO');
 
-const skillGroups = [
+const skillGroups: {
+  categoryKey: TranslationKey;
+  skills: { name: string; icon: string | null }[];
+}[] = [
   {
-    category: 'Lenguajes y desarrollo',
+    categoryKey: 'about.cat.languages',
     skills: [
       { name: 'Delphi', icon: 'simple-icons:delphi' },
       { name: 'HTML5', icon: 'simple-icons:html5' },
@@ -18,11 +25,11 @@ const skillGroups = [
     ],
   },
   {
-    category: 'Bases de datos',
+    categoryKey: 'about.cat.databases',
     skills: [{ name: 'Firebird SQL', icon: null }],
   },
   {
-    category: 'Herramientas y metodologías',
+    categoryKey: 'about.cat.tools',
     skills: [
       { name: 'Git', icon: 'simple-icons:git' },
       { name: 'CVS', icon: null },
@@ -32,7 +39,7 @@ const skillGroups = [
     ],
   },
   {
-    category: 'Sistemas y redes',
+    categoryKey: 'about.cat.systems',
     skills: [
       { name: 'Windows', icon: 'simple-icons:windows' },
       { name: 'Linux', icon: 'simple-icons:linux' },
@@ -42,7 +49,7 @@ const skillGroups = [
     ],
   },
   {
-    category: 'Hardware y soporte',
+    categoryKey: 'about.cat.hardware',
     skills: [
       { name: 'Diagnóstico', icon: null },
       { name: 'Reparación', icon: null },
@@ -52,22 +59,18 @@ const skillGroups = [
 ];
 ---
 
-<Base title="Sobre mí" description={`Conoce más sobre ${siteName}.`}>
+<Base title={t(locale, 'meta.aboutTitle')} description={t(locale, 'meta.aboutDescription', { name: siteName })}>
   <section class="page container">
-    <h1 data-reveal>Sobre mí</h1>
+    <h1 data-reveal>{t(locale, 'about.title')}</h1>
     {siteBio ? <p class="lead" data-reveal>{siteBio}</p> : null}
-    <p data-reveal>
-      Me dedico al desarrollo y al soporte técnico informático, con el objetivo
-      constante de ampliar mis conocimientos sobre desarrollo de software.
-      Este espacio reúne los proyectos en los que voy trabajando.
-    </p>
+    <p data-reveal>{t(locale, 'about.intro')}</p>
 
     <section class="skills" aria-labelledby="skills-title" data-gsap="parallax">
-      <h2 id="skills-title">Tecnologías</h2>
+      <h2 id="skills-title">{t(locale, 'about.techTitle')}</h2>
       {
         skillGroups.map((group) => (
           <div class="skill-group" data-reveal>
-            <h3 class="skill-group-title">{group.category}</h3>
+            <h3 class="skill-group-title">{t(locale, group.categoryKey)}</h3>
             <ul class="skills-list">
               {group.skills.map((skill) => (
                 <li class="skill-chip">
@@ -84,8 +87,8 @@ const skillGroups = [
     </section>
 
     <p>
-      ¿Hablamos? Escríbeme desde la página de{' '}
-      <a href={`${base}contacto`}>contacto</a>.
+      {t(locale, 'about.talkText')}{' '}
+      <a href={getRelativeLocaleUrl(locale, 'contacto')}>{t(locale, 'about.contactPage')}</a>.
     </p>
   </section>
 </Base>

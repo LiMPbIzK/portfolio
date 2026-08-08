@@ -1,16 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import { t, type Locale } from '../i18n/utils';
+
+const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
 const email = import.meta.env.SITE_EMAIL ?? '';
 ---
 
-<Base title="Contacto" description={`Ponte en contacto con ${siteName}.`}>
+<Base title={t(locale, 'meta.contactTitle')} description={t(locale, 'meta.contactDescription', { name: siteName })}>
   <section class="page container">
-    <h1>Contacto</h1>
-    <p class="lead">
-      Si quieres hablarme de un proyecto o una oportunidad, escríbeme.
-    </p>
+    <h1>{t(locale, 'contact.title')}</h1>
+    <p class="lead">{t(locale, 'contact.lead')}</p>
 
     <form
       class="contact-form"
@@ -20,11 +21,11 @@ const email = import.meta.env.SITE_EMAIL ?? '';
       novalidate
     >
       <div class="field">
-        <label for="name">Nombre</label>
+        <label for="name">{t(locale, 'contact.name')}</label>
         <input id="name" name="name" type="text" autocomplete="name" required />
       </div>
       <div class="field">
-        <label for="contact-email">Tu email</label>
+        <label for="contact-email">{t(locale, 'contact.email')}</label>
         <input
           id="contact-email"
           name="email"
@@ -34,20 +35,26 @@ const email = import.meta.env.SITE_EMAIL ?? '';
         />
       </div>
       <div class="field">
-        <label for="subject">Asunto</label>
+        <label for="subject">{t(locale, 'contact.subject')}</label>
         <input id="subject" name="subject" type="text" required />
       </div>
       <div class="field">
-        <label for="message">Mensaje</label>
+        <label for="message">{t(locale, 'contact.message')}</label>
         <textarea id="message" name="message" rows="5" required></textarea>
       </div>
-      <button class="btn btn-primary" type="submit">Enviar</button>
+      <button class="btn btn-primary" type="submit">{t(locale, 'contact.send')}</button>
       <p class="form-note" data-form-note role="status"></p>
     </form>
   </section>
 </Base>
 
 <script>
+  import { t, type Locale } from '../i18n/utils';
+
+  function currentLocale(): Locale {
+    return (document.documentElement.getAttribute('data-locale') ?? 'es') as Locale;
+  }
+
   document.addEventListener('astro:page-load', () => {
     const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
     const note = document.querySelector('[data-form-note]');
@@ -62,7 +69,7 @@ const email = import.meta.env.SITE_EMAIL ?? '';
 
       if (!name || !fromEmail || !subject || !message) {
         if (note) {
-          note.textContent = 'Por favor, rellena todos los campos.';
+          note.textContent = t(currentLocale(), 'contact.error');
         }
         return;
       }

@@ -1,8 +1,12 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { type Locale } from '../i18n/utils';
+import { profileText } from '../i18n/env';
+
+const locale = (Astro.currentLocale ?? 'es') as Locale;
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const siteRole = import.meta.env.SITE_ROLE ?? '';
+const siteRole = profileText(locale, 'ROLE');
 const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
 const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
 const email = import.meta.env.SITE_EMAIL ?? '';
