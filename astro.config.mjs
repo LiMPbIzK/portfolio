@@ -9,6 +9,15 @@ const env = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), '');
 export default defineConfig({
   site: process.env.SITE_URL ?? env.SITE_URL ?? 'http://localhost:4321',
   base: process.env.ASTRO_BASE ?? env.ASTRO_BASE ?? '',
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    fallback: { en: 'es' },
+    routing: {
+      prefixDefaultLocale: false,
+      fallbackType: 'rewrite',
+    },
+  },
   integrations: [
     sitemap(),
     icon({

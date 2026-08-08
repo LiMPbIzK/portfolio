@@ -1,31 +1,55 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Locale } from '../i18n/utils';
 
 const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const base = import.meta.env.BASE_URL;
 
-const navLinks = [
-  { href: `${base}`, label: 'Inicio' },
-  { href: `${base}sobre-mi`, label: 'Sobre mí' },
-  { href: `${base}proyectos`, label: 'Proyectos' },
-  { href: `${base}tutoriales`, label: 'Tutoriales' },
-  { href: `${base}contacto`, label: 'Contacto' },
-];
+const locale = (Astro.currentLocale ?? 'es') as Locale;
+const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
 
-const path = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const currentPath = path === '' ? '/' : `/${path}`;
+const base = import.meta.env.BASE_URL ?? '';
+const pathname = Astro.url.pathname;
+const pathNoBase = base && pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
+const pathNoLocale = pathNoBase.replace(/^\/en(?=\/|$)/, '') || '/';
+const relativePath = pathNoLocale.replace(/^\/+/, '');
+const currentUrlPath = pathname.replace(/\/+$/, '');
+
+const pages = [
+  { path: '', labelKey: 'nav.home' },
+  { path: 'sobre-mi', labelKey: 'nav.about' },
+  { path: 'proyectos', labelKey: 'nav.projects' },
+  { path: 'tutoriales', labelKey: 'nav.tutorials' },
+  { path: 'contacto', labelKey: 'nav.contact' },
+] as const;
+
+const navLinks = pages.map((page) => ({
+  href: getRelativeLocaleUrl(locale, page.path),
+  label: t(locale, page.labelKey),
+}));
+
+const switchHref = getRelativeLocaleUrl(otherLocale, relativePath);
+
+const isActive = (href: string): boolean => href.replace(/\/+$/, '') === currentUrlPath;
 ---
 
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href={base}>{siteName}</a>
+    <a class="brand" href={getRelativeLocaleUrl(locale, '')}>{siteName}</a>
     <div class="nav-actions">
+      <a
+        class="lang-toggle"
+        href={switchHref}
+        aria-label={otherLocale === 'en' ? t(locale, 'nav.toEn') : t(locale, 'nav.toEs')}
+      >
+        {otherLocale === 'en' ? 'EN' : 'ES'}
+      </a>
       <button
         class="theme-toggle"
         type="button"
         data-theme-toggle
         aria-pressed="false"
-        aria-label="Cambiar entre tema claro y oscuro"
+        aria-label={t(locale, 'nav.themeLabel')}
       >
         <Icon class="theme-icon icon-sun" name="lucide:sun" aria-hidden="true" />
         <Icon class="theme-icon icon-moon" name="lucide:moon" aria-hidden="true" />
@@ -37,21 +61,21 @@ const currentPath = path === '' ? '/' : `/${path}`;
         aria-controls="nav-menu"
         data-nav-toggle
       >
-        <span class="visually-hidden" data-nav-toggle-label>Abrir menú</span>
+        <span class="visually-hidden" data-nav-toggle-label>{t(locale, 'nav.openMenu')}</span>
         <span class="nav-toggle-line" aria-hidden="true"></span>
         <span class="nav-toggle-line" aria-hidden="true"></span>
         <span class="nav-toggle-line" aria-hidden="true"></span>
       </button>
     </div>
-    <nav id="nav-menu" class="nav-menu" aria-label="Principal">
+    <nav id="nav-menu" class="nav-menu" aria-label={t(locale, 'nav.menuLabel')}>
       <ul>
         {
           navLinks.map((link) => (
             <li>
               <a
                 href={link.href}
-                class:list={{ active: currentPath === link.href }}
-                aria-current={currentPath === link.href ? 'page' : undefined}
+                class:list={{ active: isActive(link.href) }}
+                aria-current={isActive(link.href) ? 'page' : undefined}
               >
                 {link.label}
               </a>
@@ -64,6 +88,12 @@ const currentPath = path === '' ? '/' : `/${path}`;
 </header>
 
 <script>
+  import { t, type Locale } from '../i18n/utils';
+
+  function currentLocale(): Locale {
+    return (document.documentElement.getAttribute('data-locale') ?? 'es') as Locale;
+  }
+
   function resolveTheme(): string {
     let stored: string | null = null;
     try {
@@ -96,7 +126,9 @@ const currentPath = path === '' ? '/' : `/${path}`;
       toggle.setAttribute('aria-expanded', String(open));
       menu?.classList.toggle('open', open);
       if (label) {
-        label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+        label.textContent = open
+          ? t(currentLocale(), 'nav.closeMenu')
+          : t(currentLocale(), 'nav.openMenu');
       }
     }
 
@@ -186,6 +218,30 @@ const currentPath = path === '' ? '/' : `/${path}`;
     &:hover {
       color: var(--color-accent);
       border-color: var(--color-accent);
+    }
+  }
+
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 var(--space-2);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition:
+      color var(--transition),
+      border-color var(--transition);
+
+    &:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+      text-decoration: none;
     }
   }
 
