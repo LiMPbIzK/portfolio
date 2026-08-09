@@ -42,6 +42,10 @@ const es = {
   'about.cat.hardware': 'Hardware y soporte',
   'about.talkText': '¿Hablamos? Escríbeme desde la página de',
   'about.contactPage': 'contacto',
+  'about.skill.backups': 'Copias de seguridad',
+  'about.skill.diagnostics': 'Diagnóstico',
+  'about.skill.repair': 'Reparación',
+  'about.skill.support': 'Soporte técnico',
 
   // Proyectos
   'meta.projectsTitle': 'Proyectos',
@@ -88,6 +92,9 @@ const es = {
   'tutorials.partOf': 'Parte {n} de {total}',
   'tutorials.prev': '← Anterior',
   'tutorials.next': 'Siguiente →',
+  'tutorials.copyCode': 'Copiar',
+  'tutorials.copied': '¡Copiado!',
+  'tutorials.seriesIndex': 'Índice de la serie',
 } as const;
 
 export type TranslationKey = keyof typeof es;
@@ -130,6 +137,10 @@ const en: Record<TranslationKey, string> = {
   'about.cat.hardware': 'Hardware & support',
   'about.talkText': 'Want to talk? Reach out from the',
   'about.contactPage': 'contact page',
+  'about.skill.backups': 'Backups',
+  'about.skill.diagnostics': 'Diagnostics',
+  'about.skill.repair': 'Repair',
+  'about.skill.support': 'Tech support',
 
   'meta.projectsTitle': 'Projects',
   'meta.projectsDescription': 'Projects hosted on GitHub.',
@@ -173,6 +184,9 @@ const en: Record<TranslationKey, string> = {
   'tutorials.partOf': 'Part {n} of {total}',
   'tutorials.prev': '← Previous',
   'tutorials.next': 'Next →',
+  'tutorials.copyCode': 'Copy',
+  'tutorials.copied': 'Copied!',
+  'tutorials.seriesIndex': 'Series index',
 };
 
 export const dictionaries: Record<Locale, Record<TranslationKey, string>> = { es, en };

@@ -84,7 +84,37 @@
 }
 
 .prose .astro-code {
+  position: relative;
   border: 1px solid var(--color-border);
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.625rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.astro-code:hover .copy-code-btn,
+.copy-code-btn:focus-visible {
+  opacity: 1;
+}
+
+.copy-code-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .prose table {

@@ -61,6 +61,12 @@ for (const entry of es) {
   const counterpart = enMap.get(entry.id);
   if (!counterpart) continue;
 
+  if ((entry.frontmatter.series ?? '') !== (counterpart.frontmatter.series ?? '')) {
+    problems.push(
+      `${entry.id}: serie desincronizada (es="${entry.frontmatter.series ?? 'vacío'}", en="${counterpart.frontmatter.series ?? 'vacío'}")`
+    );
+  }
+
   for (const field of ['order', 'part']) {
     const esValue = Number(entry.frontmatter[field]);
     const enValue = Number(counterpart.frontmatter[field]);
@@ -91,6 +97,34 @@ for (const entry of es) {
     problems.push(`${entry.id}: cuerpo vacío en inglés (${join(enDir, entry.file)})`);
   }
 }
+
+function checkContiguity(entries, localeLabel, dir) {
+  const bySeries = new Map();
+  for (const entry of entries) {
+    const series = entry.frontmatter.series;
+    if (!series) continue;
+    const part = Number(entry.frontmatter.part);
+    if (Number.isNaN(part)) {
+      problems.push(`${entry.id}: part no es un número en ${localeLabel}`);
+      continue;
+    }
+    if (!bySeries.has(series)) bySeries.set(series, []);
+    bySeries.get(series).push({ id: entry.id, part, file: join(dir, entry.file) });
+  }
+  for (const [series, parts] of bySeries) {
+    parts.sort((a, b) => a.part - b.part);
+    parts.forEach((item, index) => {
+      if (item.part !== index + 1) {
+        problems.push(
+          `Serie "${series}" (${localeLabel}): partes no contiguas — se esperaba parte ${index + 1} en ${item.file} pero tiene part ${item.part}`
+        );
+      }
+    });
+  }
+}
+
+checkContiguity(es, 'es', esDir);
+checkContiguity(en, 'en', enDir);
 
 if (problems.length > 0) {
   console.error('');

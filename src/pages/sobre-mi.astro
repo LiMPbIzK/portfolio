@@ -12,7 +12,7 @@ const siteBio = profileText(locale, 'BIO');
 
 const skillGroups: {
   categoryKey: TranslationKey;
-  skills: { name: string; icon: string | null }[];
+  skills: { name?: string; nameKey?: TranslationKey; icon: string | null }[];
 }[] = [
   {
     categoryKey: 'about.cat.languages',
@@ -26,16 +26,16 @@ const skillGroups: {
   },
   {
     categoryKey: 'about.cat.databases',
-    skills: [{ name: 'Firebird SQL', icon: null }],
+    skills: [{ name: 'Firebird SQL', icon: 'lucide:database' }],
   },
   {
     categoryKey: 'about.cat.tools',
     skills: [
       { name: 'Git', icon: 'simple-icons:git' },
-      { name: 'CVS', icon: null },
-      { name: 'FastReport', icon: null },
+      { name: 'CVS', icon: 'lucide:git-branch' },
+      { name: 'FastReport', icon: 'lucide:file-text' },
       { name: 'Jira', icon: 'simple-icons:jira' },
-      { name: 'Scrum / Kanban', icon: null },
+      { name: 'Scrum / Kanban', icon: 'lucide:kanban' },
     ],
   },
   {
@@ -44,16 +44,16 @@ const skillGroups: {
       { name: 'Windows', icon: 'simple-icons:windows' },
       { name: 'Linux', icon: 'simple-icons:linux' },
       { name: 'macOS', icon: 'simple-icons:apple' },
-      { name: 'LAN / Wi-Fi', icon: null },
-      { name: 'Copias de seguridad', icon: null },
+      { name: 'LAN / Wi-Fi', icon: 'lucide:wifi' },
+      { nameKey: 'about.skill.backups', icon: 'lucide:database-backup' },
     ],
   },
   {
     categoryKey: 'about.cat.hardware',
     skills: [
-      { name: 'Diagnóstico', icon: null },
-      { name: 'Reparación', icon: null },
-      { name: 'Soporte técnico', icon: null },
+      { nameKey: 'about.skill.diagnostics', icon: 'lucide:activity' },
+      { nameKey: 'about.skill.repair', icon: 'lucide:wrench' },
+      { nameKey: 'about.skill.support', icon: 'lucide:headset' },
     ],
   },
 ];
@@ -77,7 +77,7 @@ const skillGroups: {
                   {skill.icon ? (
                     <Icon class="skill-icon" name={skill.icon} aria-hidden="true" />
                   ) : null}
-                  {skill.name}
+                  {skill.name ?? t(locale, skill.nameKey!)}
                 </li>
               ))}
             </ul>

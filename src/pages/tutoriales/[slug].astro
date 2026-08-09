@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getPublishedTutorials, SERIES_INFO, normalizeId } from '../../data/tutorials';
+import { getPublishedTutorials, getSeriesInfo, normalizeId } from '../../data/tutorials';
 import { render } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { t, getLangTag, type Locale } from '../../i18n/utils';
@@ -27,11 +27,20 @@ if (!tutorial) {
 }
 const { Content } = await render(tutorial);
 
-const currentIndex = tutorials.findIndex((entry) => entry.id === tutorial.id);
-const prev = currentIndex > 0 ? tutorials[currentIndex - 1] : undefined;
-const next = currentIndex >= 0 && currentIndex < tutorials.length - 1 ? tutorials[currentIndex + 1] : undefined;
+const seriesId = tutorial.data.series ?? '';
+const seriesInfo = seriesId ? getSeriesInfo(locale, seriesId) : undefined;
 
-const series = tutorial.data.series ? SERIES_INFO[tutorial.data.series][locale] : undefined;
+const seriesParts = seriesId
+  ? tutorials
+      .filter((entry) => entry.data.series === seriesId)
+      .sort((a, b) => a.data.order - b.data.order)
+  : tutorials;
+
+const currentIndex = seriesParts.findIndex((entry) => entry.id === tutorial.id);
+const prev = currentIndex > 0 ? seriesParts[currentIndex - 1] : undefined;
+const next = currentIndex >= 0 && currentIndex < seriesParts.length - 1 ? seriesParts[currentIndex + 1] : undefined;
+const totalParts = seriesParts.length;
+
 const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), {
   year: 'numeric',
   month: 'long',
@@ -43,16 +52,35 @@ const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), 
   <article class="article container" data-reveal>
     <nav class="breadcrumbs" aria-label="Ruta">
       <a href={getRelativeLocaleUrl(locale, 'tutoriales')}>{t(locale, 'tutorials.title')}</a>
-      {series ? <span aria-hidden="true"> / </span> : null}
-      {series ? <span>{series.title}</span> : null}
+      {seriesInfo ? <span aria-hidden="true"> / </span> : null}
+      {seriesInfo ? <span>{seriesInfo.title}</span> : null}
     </nav>
 
     <header class="article-header">
       {tutorial.data.part ? (
         <p class="article-part">
-          {t(locale, 'tutorials.partOf', { n: tutorial.data.part, total: tutorials.length })}
+          {t(locale, 'tutorials.partOf', { n: tutorial.data.part, total: totalParts })}
         </p>
       ) : null}
+      {
+        seriesInfo && totalParts > 1 ? (
+          <div class="series-select">
+            <label for="series-select">{t(locale, 'tutorials.seriesIndex')}</label>
+            <select id="series-select" data-series-select>
+              {
+                seriesParts.map((part) => (
+                  <option
+                    value={getRelativeLocaleUrl(locale, `tutoriales/${normalizeId(part.id)}`)}
+                    selected={part.id === tutorial.id}
+                  >
+                    {String(part.data.part ?? '').padStart(2, '0')} · {part.data.title}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+        ) : null
+      }
       <h1>{tutorial.data.title}</h1>
       <p class="article-meta">
         <time datetime={tutorial.data.date.toISOString()}>{formattedDate}</time>
@@ -90,6 +118,19 @@ const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), 
   </article>
 </Base>
 
+<script>
+  import '../../scripts/copy-code';
+
+  document.addEventListener('astro:page-load', () => {
+    const select = document.querySelector('[data-series-select]') as HTMLSelectElement | null;
+    select?.addEventListener('change', () => {
+      if (select.value) {
+        window.location.href = select.value;
+      }
+    });
+  });
+</script>
+
 <style>
   .article {
     max-width: 820px;
@@ -112,6 +153,27 @@ const formattedDate = tutorial.data.date.toLocaleDateString(getLangTag(locale), 
     font-weight: 600;
     font-size: 0.875rem;
     margin-bottom: var(--space-1);
+  }
+
+  .series-select {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+
+    select {
+      font-family: inherit;
+      font-size: 0.875rem;
+      max-width: 100%;
+      padding: 0.375rem 0.625rem;
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
   }
 
   .article-meta {
