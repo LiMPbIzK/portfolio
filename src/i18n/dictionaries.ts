@@ -24,7 +24,7 @@ const es = {
   'hero.downloadCv': 'Descargar CV',
   'cta.tutorialsTitle': '¿Quieres aprender cómo lo hice?',
   'cta.tutorialsText':
-    'Soy una persona curiosa por naturaleza. En la sección de tutoriales te explico paso a paso cómo crear tu propia web personal con Astro, GitHub Pages y un dominio en Cloudflare.',
+    'En la sección de tutoriales explico paso a paso cómo crear tu propia web personal con Astro, GitHub Pages y un dominio en Cloudflare.',
   'cta.viewTutorials': 'Ver tutoriales',
   'meta.homeTitle': 'Inicio',
 
@@ -120,7 +120,7 @@ const en: Record<TranslationKey, string> = {
   'hero.downloadCv': 'Download CV',
   'cta.tutorialsTitle': 'Want to learn how I built it?',
   'cta.tutorialsText':
-    "I'm a curious person by nature. In the tutorials section I explain step by step how to build your own personal website with Astro, GitHub Pages and a Cloudflare domain.",
+    'In the tutorials section I explain step by step how to build your own personal website with Astro, GitHub Pages and a domain on Cloudflare.',
   'cta.viewTutorials': 'View tutorials',
   'meta.homeTitle': 'Home',
 

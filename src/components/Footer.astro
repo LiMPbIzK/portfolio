@@ -1,38 +1,29 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { type Locale } from '../i18n/utils';
-import { profileText } from '../i18n/env';
+import { Icon } from "astro-icon/components";
 
-const locale = (Astro.currentLocale ?? 'es') as Locale;
-
-const siteName = import.meta.env.SITE_NAME ?? 'Portfolio';
-const siteRole = profileText(locale, 'ROLE');
-const githubUrl = import.meta.env.SITE_GITHUB_URL ?? '';
-const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? '';
-const email = import.meta.env.SITE_EMAIL ?? '';
-const year = new Date().getFullYear();
+const siteName = import.meta.env.SITE_NAME ?? "Portfolio";
+const githubUrl = import.meta.env.SITE_GITHUB_URL ?? "";
+const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? "";
+const email = import.meta.env.SITE_EMAIL ?? "";
 
 const socials = [
   githubUrl
-    ? { href: githubUrl, label: 'GitHub', icon: 'simple-icons:github' }
+    ? { href: githubUrl, label: "GitHub", icon: "simple-icons:github" }
     : null,
   linkedinUrl
-    ? { href: linkedinUrl, label: 'LinkedIn', icon: 'simple-icons:linkedin' }
+    ? { href: linkedinUrl, label: "LinkedIn", icon: "simple-icons:linkedin" }
     : null,
   email
-    ? { href: `mailto:${email}`, label: 'Email', icon: 'simple-icons:gmail' }
+    ? { href: `mailto:${email}`, label: "Email", icon: "simple-icons:gmail" }
     : null,
-].filter(
-  (social): social is { href: string; label: string; icon: string } => Boolean(social)
+].filter((social): social is { href: string; label: string; icon: string } =>
+  Boolean(social),
 );
 ---
 
 <footer class="site-footer">
   <div class="container footer-wrap">
-    <p class="footer-brand">
-      {siteName}
-      {siteRole ? ` · ${siteRole}` : ''}
-    </p>
+    <p class="footer-brand">{siteName}</p>
     <ul class="footer-links">
       {
         socials.map((social) => (
@@ -45,7 +36,7 @@ const socials = [
         ))
       }
     </ul>
-    <p class="footer-copy">© {year} {siteName}</p>
+    <p class="footer-copy">© 2026 {siteName}</p>
   </div>
 </footer>
 
