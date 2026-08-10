@@ -79,6 +79,7 @@ const es = {
   'contact.message': 'Mensaje',
   'contact.send': 'Enviar',
   'contact.error': 'Por favor, rellena todos los campos.',
+  'contact.invalidEmail': 'Introduce un email válido (ej: nombre@dominio.com).',
 
   // Tutoriales
   'meta.tutorialsTitle': 'Tutoriales',
@@ -172,6 +173,7 @@ const en: Record<TranslationKey, string> = {
   'contact.message': 'Message',
   'contact.send': 'Send',
   'contact.error': 'Please fill in all the fields.',
+  'contact.invalidEmail': 'Please enter a valid email (e.g. name@domain.com).',
 
   'meta.tutorialsTitle': 'Tutorials',
   'meta.tutorialsDescription':

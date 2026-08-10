@@ -1,10 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
 
-const siteName = import.meta.env.SITE_NAME ?? "Portfolio";
 const githubUrl = import.meta.env.SITE_GITHUB_URL ?? "";
 const linkedinUrl = import.meta.env.SITE_LINKEDIN_URL ?? "";
-const email = import.meta.env.SITE_EMAIL ?? "";
 
 const socials = [
   githubUrl
@@ -13,9 +11,6 @@ const socials = [
   linkedinUrl
     ? { href: linkedinUrl, label: "LinkedIn", icon: "simple-icons:linkedin" }
     : null,
-  email
-    ? { href: `mailto:${email}`, label: "Email", icon: "simple-icons:gmail" }
-    : null,
 ].filter((social): social is { href: string; label: string; icon: string } =>
   Boolean(social),
 );
@@ -23,7 +18,6 @@ const socials = [
 
 <footer class="site-footer">
   <div class="container footer-wrap">
-    <p class="footer-brand">{siteName}</p>
     <ul class="footer-links">
       {
         socials.map((social) => (
@@ -36,7 +30,7 @@ const socials = [
         ))
       }
     </ul>
-    <p class="footer-copy">© 2026 {siteName}</p>
+    <p class="footer-copy">© 2026</p>
   </div>
 </footer>
 
@@ -54,12 +48,6 @@ const socials = [
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-  }
-
-  .footer-brand {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-weight: 600;
   }
 
   .footer-links {

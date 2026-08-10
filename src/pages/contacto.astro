@@ -48,6 +48,14 @@ const email = import.meta.env.SITE_EMAIL ?? '';
   </section>
 </Base>
 
+<style>
+  .field textarea {
+    resize: vertical;
+    min-height: 5lh;
+    max-height: 15lh;
+  }
+</style>
+
 <script>
   import { t, type Locale } from '../i18n/utils';
 
@@ -55,9 +63,32 @@ const email = import.meta.env.SITE_EMAIL ?? '';
     return (document.documentElement.getAttribute('data-locale') ?? 'es') as Locale;
   }
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{3,}$/;
+
+  function validateEmail(email: string, note: Element | null) {
+    if (!EMAIL_REGEX.test(email)) {
+      if (note) {
+        note.textContent = t(currentLocale(), 'contact.invalidEmail');
+      }
+      return false;
+    }
+    if (note) {
+      note.textContent = '';
+    }
+    return true;
+  }
+
   document.addEventListener('astro:page-load', () => {
     const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
     const note = document.querySelector('[data-form-note]');
+    const emailInput = document.querySelector('#contact-email') as HTMLInputElement | null;
+
+    emailInput?.addEventListener('blur', () => {
+      const value = emailInput.value.trim();
+      if (value) {
+        validateEmail(value, note);
+      }
+    });
 
     form?.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -71,6 +102,10 @@ const email = import.meta.env.SITE_EMAIL ?? '';
         if (note) {
           note.textContent = t(currentLocale(), 'contact.error');
         }
+        return;
+      }
+
+      if (!validateEmail(String(fromEmail), note)) {
         return;
       }
 

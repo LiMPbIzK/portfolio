@@ -23,7 +23,6 @@ const siteCvUrl = locale === 'en'
       {t(locale, 'hero.greeting')} <span class="gradient-text">{siteName}</span>
     </h1>
     {siteRole ? <p class="hero-role">{siteRole}</p> : null}
-    {siteBioShort ? <p class="hero-bio">{siteBioShort}</p> : null}
     {siteObjective ? <p class="hero-objective">{siteObjective}</p> : null}
     <div class="hero-actions">
       <a class="btn btn-primary" href={getRelativeLocaleUrl(locale, 'proyectos')}>{t(locale, 'hero.viewProjects')}</a>
