@@ -42,6 +42,40 @@ export const SERIES_INFO: Record<string, Record<Locale, SeriesInfo>> = {
       ],
     },
   },
+  'instalacion-opencode-portable-con-omniroute-y-openrouter': {
+    es: {
+      title: 'Instalación de OpenCode portable con Omniroute y OpenRouter',
+      description:
+        'Guía completa para instalar OpenCode en un SSD externo de forma totalmente portable, añadir OmniRoute con Node 22 portable para gateway de modelos con fallback automático, y configurar OpenRouter como proveedor de modelos gratis (:free) con límites claros. Contada desde la experiencia: decisiones, problemas (crash Node 20, bug cmd.exe) y soluciones.',
+      highlights: [
+        'opencode',
+        'omniroute',
+        'openrouter',
+        'portable',
+        'ssd',
+        'node',
+        'fallback',
+        'gratis',
+        'windows',
+      ],
+    },
+    en: {
+      title: 'Portable OpenCode installation with OmniRoute and OpenRouter',
+      description:
+        'Complete guide to install OpenCode on an external SSD fully portable, add OmniRoute with portable Node 22 for model gateway with automatic fallback, and configure OpenRouter as a free model provider (:free) with clear limits. Told from experience: decisions, problems (Node 20 crash, cmd.exe bug) and solutions.',
+      highlights: [
+        'opencode',
+        'omniroute',
+        'openrouter',
+        'portable',
+        'ssd',
+        'node',
+        'fallback',
+        'free',
+        'windows',
+      ],
+    },
+  },
   'bot-laliga': {
     es: {
       title: 'Bot de LaLiga con calendario de fútbol',
