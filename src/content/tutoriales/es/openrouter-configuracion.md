@@ -92,4 +92,4 @@ Con OpenRouter conectado tienes dos capas de modelos gratis:
 - **Directa**: `/connect` → OpenRouter → `/models` para elegir.
 - **Con fallback**: key en OmniRoute → formar parte del combo `best-free-coding`.
 
-¡Y con esto cerramos la serie **instalacion-opencode-omniroute-openrouter**! opencode portable en el SSD + gateway con fallback automático + OpenRouter como proveedor extra.
+Con esto la parte 3 deja atada la parte "modelos" de la serie: opencode portable en el SSD + gateway con fallback automático + OpenRouter como proveedor extra. El siguiente paso natural es enseñar a opencode a trabajar en este entorno: en la parte 4 creamos las reglas de Windows y de desarrollo que guían al asistente.

@@ -32,6 +32,33 @@
   color: var(--color-text);
 }
 
+.prose .download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition:
+    border-color var(--transition),
+    color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+.prose .download-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  text-decoration: none;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  transform: translateY(-1px);
+}
+
 .prose ul,
 .prose ol {
   padding-left: 1.5rem;

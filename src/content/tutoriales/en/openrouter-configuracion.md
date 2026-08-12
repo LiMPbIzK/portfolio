@@ -92,4 +92,4 @@ With OpenRouter connected you have two layers of free models:
 - **Direct**: `/connect` → OpenRouter → `/models` to choose.
 - **With fallback**: key in OmniRoute → part of the `best-free-coding` combo.
 
-And that wraps up the **instalacion-opencode-omniroute-openrouter** series! Portable opencode on the SSD + gateway with automatic fallback + OpenRouter as extra provider.
+That wraps up the "models" side of the series: portable opencode on the SSD + gateway with automatic fallback + OpenRouter as extra provider. The natural next step is teaching opencode to work in this environment: in part 4 we create the Windows and development rules that guide the assistant.
