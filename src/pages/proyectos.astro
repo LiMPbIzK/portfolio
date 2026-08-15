@@ -33,7 +33,7 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
 <script>
   import { getRepos } from '../scripts/github';
   import type { GitHubRepo } from '../scripts/github';
-  import { t, type Locale } from '../i18n/utils';
+  import { t, type Locale, type TranslationKey } from '../i18n/utils';
 
   function currentLocale(): Locale {
     return (document.documentElement.getAttribute('data-locale') ?? 'es') as Locale;
@@ -80,7 +80,12 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
   const arrowSvg =
     '<svg class="card-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>';
 
+  const customLinks: Record<string, { url: string; labelKey: TranslationKey }> = {
+    lexi: { url: 'https://lexi.fmartinezgarcia.com', labelKey: 'projects.app' },
+  };
+
   function projectCard(repo: GitHubRepo): string {
+    const extra = customLinks[repo.name];
     return `
       <article class="project-card">
         <h3 class="project-name">
@@ -109,12 +114,17 @@ const siteUser = import.meta.env.SITE_GITHUB_USER ?? '';
           }
         </div>
         <div class="project-links">
+          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), 'projects.code')} ${arrowSvg}</a>
+          ${
+            extra
+              ? `<a class="btn btn-secondary" href="${escapeHtml(extra.url)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), extra.labelKey)} ${arrowSvg}</a>`
+              : ''
+          }
           ${
             repo.homepage
               ? `<a class="btn btn-secondary" href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), 'projects.demo')} ${arrowSvg}</a>`
               : ''
           }
-          <a class="btn btn-primary" href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">${t(currentLocale(), 'projects.code')} ${arrowSvg}</a>
         </div>
       </article>
     `;

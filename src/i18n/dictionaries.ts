@@ -67,6 +67,7 @@ const es = {
   'projects.forks': '{count} forks',
   'projects.demo': 'Demo',
   'projects.code': 'Código',
+  'projects.app': 'App',
 
   // Contacto
   'meta.contactTitle': 'Contacto',
@@ -162,6 +163,7 @@ const en: Record<TranslationKey, string> = {
   'projects.forks': '{count} forks',
   'projects.demo': 'Demo',
   'projects.code': 'Code',
+  'projects.app': 'App',
 
   'meta.contactTitle': 'Contact',
   'meta.contactDescription': 'Get in touch with {name}.',
