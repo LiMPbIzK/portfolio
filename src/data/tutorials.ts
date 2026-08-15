@@ -106,6 +106,44 @@ export const SERIES_INFO: Record<string, Record<Locale, SeriesInfo>> = {
       ],
     },
   },
+  'proyecto-lexi': {
+    es: {
+      title: 'LeXi: un comunicador AAC offline-first',
+      description:
+        'Serie completa sobre cómo construí LeXi, una PWA de comunicación aumentativa con tarjetas con sonido, teclado y TTS, sobre Cloudflare Pages, D1 y R2. Contada desde la experiencia: decisiones, problemas (binds, FK, Service Worker, huso horario) y soluciones.',
+      highlights: [
+        'astro',
+        'svelte',
+        'pwa',
+        'cloudflare pages',
+        'd1',
+        'r2',
+        'offline-first',
+        'arasaac',
+        'aac',
+        'service worker',
+        'indexeddb',
+      ],
+    },
+    en: {
+      title: 'LeXi: an offline-first AAC communicator',
+      description:
+        'Full series on how I built LeXi, an augmentative-communication PWA with sound cards, keyboard and TTS, on Cloudflare Pages, D1 and R2. Told from experience: decisions, problems (bindings, FKs, Service Worker, timezone) and solutions.',
+      highlights: [
+        'astro',
+        'svelte',
+        'pwa',
+        'cloudflare pages',
+        'd1',
+        'r2',
+        'offline-first',
+        'arasaac',
+        'aac',
+        'service worker',
+        'indexeddb',
+      ],
+    },
+  },
 };
 
 export function getSeriesInfo(locale: Locale, id: string): SeriesInfo {
