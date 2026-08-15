@@ -68,7 +68,7 @@ The tablet lost `localStorage` (Android memory management) → new UUID → "cod
 
 ## Deploy to Cloudflare Pages
 
-The first real deploy: connect the repo to Pages (build `npm run build`, output `dist`, `main` branch). Result: **`https://lexi-426.pages.dev`**. Bindings are read from the repo's `wrangler.json`; nothing to touch in the dashboard.
+The first real deploy: connect the repo to Pages (build `npm run build`, output `dist`, `main` branch). Result: **`https://your-project.pages.dev`**. Bindings are read from the repo's `wrangler.json`; nothing to touch in the dashboard.
 
 > Lesson: **a CSP without `'unsafe-inline'` leaves the app stuck on "Loading".** Astro hydrates islands with inline scripts; if `script-src` forbids them, nothing mounts. We confirmed it with Playwright and fixed it in `public/_headers`.
 

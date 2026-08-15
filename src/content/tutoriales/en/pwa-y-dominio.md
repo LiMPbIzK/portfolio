@@ -9,7 +9,7 @@ tags: ["pwa", "service worker", "cloudflare", "domain", "cache-control", "timezo
 draft: false
 ---
 
-The last milestone: make LeXi **truly installable** and serve it from the custom domain `lexi.fmartinezgarcia.com`. It was the milestone with the most surprise bugs of the whole series, all related to the difference between "works locally" and "works in production".
+The last milestone: make LeXi **truly installable** and serve it from the custom domain `your-domain.com`. It was the milestone with the most surprise bugs of the whole series, all related to the difference between "works locally" and "works in production".
 
 ## iOS support
 
@@ -83,7 +83,7 @@ The `LEXI-DEMO-CODE` code already existed; we added a **"Try the app (demo)"** b
 ## Final verification
 
 - Lighthouse 13 removed the PWA category from core, so I verified the criteria manually (HTTPS, manifest, SW, icons 200, `start_url`).
-- Deploy to `lexi.fmartinezgarcia.com` with a DNS CNAME → `lexi-426.pages.dev` and automatic SSL.
+- Deploy to `your-domain.com` with a DNS CNAME → `your-project.pages.dev` and automatic SSL.
 
 ## End of the series
 

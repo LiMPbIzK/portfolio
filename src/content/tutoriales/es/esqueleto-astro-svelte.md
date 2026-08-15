@@ -34,7 +34,7 @@ El primer escollo fue casar versiones. La combinación que funcionó (y que ya n
 ```js
 export default defineConfig({
   output: 'static',
-  site: 'https://lexi.fmartinezgarcia.com',
+  site: 'https://tu-dominio.com',
   integrations: [
     svelte(),
     AstroPWA({

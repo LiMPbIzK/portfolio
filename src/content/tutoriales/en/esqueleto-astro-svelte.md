@@ -34,7 +34,7 @@ The first hurdle was matching versions. The combination that worked (and that I 
 ```js
 export default defineConfig({
   output: 'static',
-  site: 'https://lexi.fmartinezgarcia.com',
+  site: 'https://your-domain.com',
   integrations: [
     svelte(),
     AstroPWA({
